@@ -4,8 +4,6 @@ import { Suspense } from 'react'
 
 function App() {
 
-  // TEST 2
-
   return (
     <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
