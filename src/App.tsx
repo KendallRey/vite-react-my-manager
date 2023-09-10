@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { Suspense } from 'react'
+import LandingPage from './pages/landing-page/LandingPage'
 
 function App() {
 
@@ -10,7 +11,7 @@ function App() {
     <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path='/' element={<></>}>
+            <Route path='/' element={<LandingPage/>}>
             </Route>
           </Routes>
         </Suspense>
