@@ -14,7 +14,7 @@ const SignInApi = async ({
     .then((res) => {
         return res
     })
-    .catch((err) => {
+    .catch(() => {
         return null
     })
 }
@@ -27,7 +27,7 @@ export const SignOutApi = async () => {
     .then((res) => {
         return res
     })
-    .catch((err) => {
+    .catch(() => {
         return null
     })
 }
