@@ -1,0 +1,76 @@
+
+@media (prefers-color-scheme: light) {
+	.card {
+		color: var(--light-text);
+		background: var(--light-var);
+		border-color: var(--light) !important;
+	}
+}
+  
+@media (prefers-color-scheme: dark) {
+	.card {
+		color: var(--dark-text);
+		background: var(--dark-var);
+		border-color: var(--dark) !important;
+	}
+	.card_content {
+		background: color.$darkVar;
+	}
+	.card::before {
+		background: radial-gradient(
+			10rem circle at var(--mouse-x ) var(--mouse-y),
+			var(--dark-7),
+			transparent 100%);
+	}
+}
+
+.card {
+	border : 1px solid;
+	position: relative;
+	z-index: 1;
+}
+.card:hover {
+	transition-duration: 200ms;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.title {
+	font-weight: bold;
+
+	hr {
+		margin-top: .2rem;
+		border-color: var(--dark-var);
+	}
+}
+
+.card:hover::before {
+	opacity: 1;
+}
+
+.card::before {
+	content : "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	opacity: 0;
+	top: 0px;
+	left: 0px;
+	transition-duration: 300ms;
+}
+
+.card_content {
+	position: relative;
+	z-index: 3;
+	margin: 1px;
+	box-sizing: border-box;
+	padding: .5rem;
+	width: calc(100% - 2px);
+	height: calc(100% - 2px);
+}
+
+.container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 1rem;
+}

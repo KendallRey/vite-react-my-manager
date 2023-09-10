@@ -1,0 +1,84 @@
+@use '../../_color.scss';
+
+@media (prefers-color-scheme: light) {
+	.card {
+		color: var(--light-text);
+		background: var(--light);
+		border-color: var(--light-var);
+	}
+	.card:hover {
+		background: var(--light-var);
+	}
+	.cover {
+		background: var(--light-var);
+	}
+}
+  
+@media (prefers-color-scheme: dark) {
+	.card {
+		color: var(--dark-text);
+		background: var(--dark);
+		border-color: var(--dark-var);
+	}
+	.card:hover {
+		background: var(--dark-var);
+	}
+	.cover {
+		background: var(--dark-var);
+	}
+}
+
+.card {
+	padding: .8rem;
+	border-radius: 1rem;
+	border: 1px solid;
+	position: relative;
+	overflow-x: hidden;
+	
+	min-height: 280px;
+}
+
+.title {
+	font-weight: bold;
+	text-align: end;
+	font-size: 2em;
+	padding-right: 1rem;
+}
+
+.cover {
+	position: absolute;
+	border-radius: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	inset: 0;
+	z-index: 1;
+	transition-duration: 200ms;
+}
+
+.container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+	gap: 1rem;
+}
+
+.hide {
+
+}
+
+.unhide {
+	margin-left: calc(120%);
+	opacity: 0;
+}
+
+.content {
+	transition-duration: 200ms;
+}
+
+.up {
+	padding-bottom: .5rem;
+}
+
+.down {
+	padding-top: .5rem;
+}

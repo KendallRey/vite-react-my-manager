@@ -1,0 +1,67 @@
+
+@media (prefers-color-scheme: light) {
+	.card {
+		color: var(--light-text);
+		background: var(--light);
+		border-color: var(--light-var);
+	}
+	.card:hover {
+		background: var(--light-var);
+	}
+	.card::before  {
+		background: radial-gradient(
+			15rem circle at var(--mouse-x ) var(--mouse-y),
+			var(--dark-5),
+			transparent 100%)
+	}
+}
+  
+@media (prefers-color-scheme: dark) {
+	.card {
+		color: var(--dark-text);
+		background: var(--dark);
+		border-color: var(--dark-var);
+	}
+	.card:hover {
+		background: var(--dark-var);
+	}
+	.card::before  {
+		background: radial-gradient(
+			15rem circle at var(--mouse-x ) var(--mouse-y),
+			var(--light-5),
+			transparent 100%)
+	}
+}
+
+.card {
+	padding: .5rem;
+	border-radius: 1rem;
+	border: 2px solid;
+	position: relative;
+}
+
+.title {
+	font-weight: bold;
+
+	hr {
+		margin-top: .2rem;
+		border-color: var(--dark-var);
+	}
+}
+
+.container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+	gap: 1rem;
+}
+
+.card::before {
+	content: "";
+	opacity: 0;
+	transition-duration: 500ms;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 120%;
+	width: 120%;
+}
