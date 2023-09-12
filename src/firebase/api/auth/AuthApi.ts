@@ -14,7 +14,8 @@ const SignInApi = async ({
     .then((res) => {
         return res
     })
-    .catch(() => {
+    .catch((err) => {
+        console.log("test",err)
         return null
     })
 }
@@ -24,8 +25,8 @@ export default SignInApi
 export const SignOutApi = async () => {
 
     return await signOut(auth)
-    .then((res) => {
-        return res
+    .then(() => {
+        return true
     })
     .catch(() => {
         return null
