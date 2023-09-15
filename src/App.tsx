@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
-import { Suspense } from 'react'
-import LandingPage from './pages/landing-page/LandingPage'
+import { Suspense, lazy } from 'react'
+
+const LandingPage = lazy(()=>import("./pages/landing-page/LandingPage"))
 
 function App() {
 
