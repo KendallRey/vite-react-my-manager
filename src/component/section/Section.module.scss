@@ -1,0 +1,23 @@
+@media (prefers-color-scheme: light) {
+    .section {
+        border-color: var(--light-text) !important;
+        box-shadow: var(--light)0px 5px 15px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .section {
+        border-color: var(--dark-text) !important;
+        box-shadow: var(--dark)0px 5px 15px;
+    }
+}
+
+.section {
+    padding: 1.5rem 2rem;
+    border: 1px solid;
+    border-radius: .5rem;
+}
+
+.blur {
+    backdrop-filter: blur(10px);
+}

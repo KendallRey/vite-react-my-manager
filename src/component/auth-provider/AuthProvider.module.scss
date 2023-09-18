@@ -1,0 +1,46 @@
+@media (prefers-color-scheme: light) {
+
+}
+
+@media (prefers-color-scheme: dark) {
+    
+}
+
+$twitterColor : #1DA1F2;
+$facebookColor : #0C88EE;
+
+.button {
+    font-size: 2rem;
+    background: white;
+    border-radius: 50%;
+    border: .3rem solid white;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+
+    position: relative;
+
+    svg {
+        transition-duration: 150ms;
+        top : calc(0%);
+        position: absolute;
+    }
+
+    &:hover {
+        svg {
+            top : calc(0% + -0.5rem);
+            transform: rotate(-20deg);
+        }
+    }
+}
+
+.github {
+    color : black !important;
+}
+
+.facebook {
+    color: $facebookColor;
+}
+
+.twitter {
+    color: $twitterColor;
+}

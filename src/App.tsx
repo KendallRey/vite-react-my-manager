@@ -5,6 +5,7 @@ import { Suspense, lazy } from 'react'
 const LandingPage = lazy(()=>import("./pages/landing-page/LandingPage"))
 const DashboardPage = lazy(()=>import("./pages/dashboard-page/DashboardPage"))
 const AuthLayout = lazy(()=>import("./layout/AuthLayout"))
+const Layout = lazy(()=>import("./layout/Layout"))
 
 function App() {
 
@@ -12,17 +13,23 @@ function App() {
 
 	return (
 		<BrowserRouter>
-				<Suspense fallback={<div>Loading...</div>}>
-					<Routes>
-						<Route path='/' element={<LandingPage/>}>
-						</Route>
 
-						<Route path='user' element={<AuthLayout/>}>
-							<Route index element={<DashboardPage/>}/>
-						</Route>
-					</Routes>
-				</Suspense>
-			</BrowserRouter>
+			<Suspense fallback={<div>...</div>}>
+				<Routes>
+					<Route path='/' element={<Layout/>}>
+						<Route index element={<LandingPage/>}/>
+					</Route>
+				</Routes>
+			</Suspense>
+			
+			<Suspense fallback={<div>Loading...</div>}>
+				<Routes>
+					<Route path='user' element={<AuthLayout/>}>
+						<Route index element={<DashboardPage/>}/>
+					</Route>
+				</Routes>
+			</Suspense>
+		</BrowserRouter>
 	)
 }
 

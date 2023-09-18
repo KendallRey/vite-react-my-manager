@@ -4,6 +4,7 @@
 
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	/* font-family: "Inter", arial, sans-serif; */
 	line-height: 1.5;
 	font-weight: 400;
 
@@ -17,9 +18,9 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 
-	--max-content-width : 1440px;
+	--max-container-width : 1440px;
 
-	--dark : #313131;
+	--dark : #444444;
 	--dark-text : #f7f7f7;
 	--dark-action : #DF00A9;
 	--dark-var : #1a1a1a;
@@ -45,7 +46,7 @@ body {
 }
 
 input {
-	outline : none;
+	outline : none !important;
 }
 
 @media (prefers-color-scheme: light) {
