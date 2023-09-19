@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, TwitterAuthProvider, GithubAuthProvider, getAuth } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, TwitterAuthProvider, GithubAuthProvider, getAuth, Auth } from "firebase/auth";
 
 const GOOGLE_AUTH_PROVIDER = new GoogleAuthProvider()
 const FACEBOOK_PROVIDER = new FacebookAuthProvider()
@@ -15,12 +15,13 @@ export const SignInWithGoogle = async () => {
 	})
 }
 
-export const SignInWithFacebook = async () => {
-	return await signInWithPopup(getAuth(), FACEBOOK_PROVIDER)
+export const SignInWithFacebook = async (auth : Auth) => {
+	return await signInWithPopup(auth, FACEBOOK_PROVIDER)
 	.then((res) => {
 		return res
 	})
-	.catch(() => {
+	.catch((err) => {
+		console.log("FB_ERR", err)
 		return null
 	})
 }
@@ -31,7 +32,6 @@ export const SignInWithTwitter = async () => {
 		return res
 	})
 	.catch(() => {
-		console.log("ewa312e",)
 		return null
 	})
 }
@@ -42,8 +42,8 @@ export const SignInWithGithub = async () => {
 	.then((res) => {
 		return res
 	})
-	.catch(() => {
-		console.log("ewae",)
+	.catch((err) => {
+		console.log("GIT_ERR", err)
 		return null
 	})
 }
