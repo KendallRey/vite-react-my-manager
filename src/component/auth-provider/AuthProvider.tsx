@@ -3,6 +3,7 @@ import { SignInWithFacebook, SignInWithGithub, SignInWithGoogle, SignInWithTwitt
 import style from './AuthProvider.module.scss'
 import { FcGoogle } from 'react-icons/fc'
 import { FaFacebook, FaTwitter, FaGithub } from 'react-icons/fa' 
+import { auth } from '../../firebase/FirebaseManager'
 
 // 
 // npm install react-icons --save
@@ -76,7 +77,7 @@ const AuthButtonFacebook = ( props : CustomAuthButtonType) => {
 		if(onClick)
 			onClick(e)
 
-		const data = await SignInWithFacebook()
+		const data = await SignInWithFacebook(auth)
 		onAuth(data)
 	}
 
