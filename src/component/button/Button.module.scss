@@ -10,7 +10,7 @@
 	}
 
 	.button {
-		border: 1px solid var(--light-var);
+		border: 1px solid var(--light);
 		background: none;
 		
 		&:hover {
@@ -32,7 +32,7 @@
 	}
 
 	.button {
-		border: 1px solid var(--dark-var);
+		border: 1px solid var(--dark);
 		background: none;
 		
 		&:hover {
