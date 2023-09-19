@@ -1,9 +1,13 @@
 @media (prefers-color-scheme: light) {
-
+    .button {
+        box-shadow: var(--light) 0px 5px 15px;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
-    
+    .button {
+        box-shadow: var(--dark) 0px 5px 15px;
+    }
 }
 
 $twitterColor : #1DA1F2;

@@ -1,13 +1,26 @@
-.container {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: black;
+@media (prefers-color-scheme: light) {
+	.container {
+		background: white;
+	}
+	.content {
+		color : black;
+	}
 }
 
-.content {
-    color : white;
+@media (prefers-color-scheme: dark) {
+	.container {
+		background: black;
+	}
+	.content {
+		color : white;
+	}
+}
 
+
+.container {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

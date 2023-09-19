@@ -14,6 +14,7 @@ const Button = (props : ButtonType) => {
 
 	return (
 		<button className={`${style.button} ${className ?? ""}`}
+			type='button'
 			{...cleanProps}>
 			{children}
 		</button>
@@ -30,6 +31,7 @@ const ButtonAction = (props : ButtonType) => {
 
 	return (
 		<Button className={`${style.action} ${className ?? ""}`}
+			type='button'
 			{...cleanProps}>
 			{children}
 		</Button>

@@ -1,5 +1,4 @@
 import { UserCredential } from 'firebase/auth'
-import { auth } from '../../firebase/FirebaseManager'
 import { SignInWithFacebook, SignInWithGithub, SignInWithGoogle, SignInWithTwitter } from '../../firebase/api/auth/AuthProviderApi'
 import style from './AuthProvider.module.scss'
 import { FcGoogle } from 'react-icons/fc'
@@ -23,6 +22,7 @@ const AuthButton = (props : AuthButtonType) => {
 
 	return (
 		<button className={style.button}
+			type='button'
 			{...cleanProps}>
 			{children}
 		</button>
@@ -48,13 +48,14 @@ const AuthButtonGoogle = ( props : CustomAuthButtonType) => {
 		if(onClick)
 			onClick(e)
 
-		const data = await SignInWithGoogle(auth)
+		const data = await SignInWithGoogle()
 		onAuth(data)
 	}
 
 	return (
 		<button className={style.button}
 			onClick={OnClick}
+			type='button'
 			{...cleanProps}>
 			<FcGoogle/>
 		</button>
@@ -75,13 +76,14 @@ const AuthButtonFacebook = ( props : CustomAuthButtonType) => {
 		if(onClick)
 			onClick(e)
 
-		const data = await SignInWithFacebook(auth)
+		const data = await SignInWithFacebook()
 		onAuth(data)
 	}
 
 	return (
 		<button className={`${style.button} ${className ?? ""} ${style.facebook}`}
 			onClick={OnClick}
+			type='button'
 			{...cleanProps}>
 			<FaFacebook/>
 		</button>
@@ -102,13 +104,14 @@ const AuthButtonTwitter = ( props : CustomAuthButtonType) => {
 		if(onClick)
 			onClick(e)
 
-		const data = await SignInWithTwitter(auth)
+		const data = await SignInWithTwitter()
 		onAuth(data)
 	}
 
 	return (
 		<button className={`${style.button} ${className ?? ""} ${style.twitter}`}
 			onClick={OnClick}
+			type='button'
 			{...cleanProps}>
 			<FaTwitter/>
 		</button>
@@ -129,13 +132,14 @@ const AuthButtonGithub = ( props : CustomAuthButtonType) => {
 		if(onClick)
 			onClick(e)
 
-		const data = await SignInWithGithub(auth)
+		const data = await SignInWithGithub()
 		onAuth(data)
 	}
 
 	return (
 		<button className={`${style.button} ${className ?? ""} ${style.github}`}
 			onClick={OnClick}
+			type='button'
 			{...cleanProps}>
 			<FaGithub/>
 		</button>
