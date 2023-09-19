@@ -79,18 +79,10 @@ const LandingPage = () => {
 							</Button>
 						</div>
 						<div className='m-4 flex gap-4 justify-center'>
-							<AuthProvider.Facebook onAuth={(e)=>{
-								console.log("test2",e)
-							}}/>
-							<AuthProvider.Google onAuth={(e)=>{
-								console.log("test3",e)
-							}}/>
-							<AuthProvider.Twitter onAuth={(e)=>{
-								console.log("test4",e)
-							}}/>
-							<AuthProvider.Github onAuth={(e)=>{
-								console.log("test5",e)
-							}}/>
+							{/* <AuthProvider.Facebook onAuth={()=>{}}/> */}
+							<AuthProvider.Google onAuth={()=>{}}/>
+							{/* <AuthProvider.Twitter onAuth={()=>{}}/> */}
+							{/* <AuthProvider.Github onAuth={()=>{}}/> */}
 						</div>
 					</form>
 				</Section.Blur>
