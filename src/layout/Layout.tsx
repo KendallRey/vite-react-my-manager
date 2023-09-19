@@ -1,34 +1,30 @@
 import { Outlet } from "react-router-dom"
+import style from './Layout.module.scss'
 import useFirebaseAuth from "../firebase/api/auth/AuthHook"
 import ErrorPage from "../component/error-page/ErrorPage"
 
-const AuthLayout = () => {
+const Layout = () => {
 
 	// 
 	//#region Redirect User
 
-	const { user } = useFirebaseAuth({ fallback_to : "/"})
+	const { user } = useFirebaseAuth({ redirect : "/user"})
 
 	//#endregion
 	// 
+
+	console.log("L", user)
 
 	if(user === undefined)
 		return (
 			<ErrorPage message='...'/>
 		)
 
-	if(user === null)
-		return (
-			<ErrorPage
-				code={402}
-				message='Session Expired'/>
-		)
-
 	return (
-		<div>
+		<main className={style.main}>
 			<Outlet/>
-		</div>
+		</main>
 	)
 }
 
-export default AuthLayout
+export default Layout

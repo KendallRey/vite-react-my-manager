@@ -1,55 +1,102 @@
-import { signInWithPopup } from 'firebase/auth'
-import Card, { CardContainer } from '../../component/card/Card'
-import { auth } from '../../firebase/FirebaseManager'
-import SignInApi, { SignOutApi } from '../../firebase/api/auth/AuthApi'
+import SignInApi from '../../firebase/api/auth/AuthApi'
 import style from './LandingPage.module.scss'
-import { GoogleAuthProvider } from "firebase/auth";
 import Input from '../../component/input/Input'
-
-const provider = new GoogleAuthProvider();
+import AuthProvider from '../../component/auth-provider/AuthProvider'
+import Section from '../../component/section/Section'
+import Button from '../../component/button/Button'
+import { useState } from 'react'
+import { CleanText } from '../../utils/DataHandler'
+import { useNavigate } from 'react-router-dom'
 
 const LandingPage = () => {
 
-	const user = auth.currentUser
+	const navigate = useNavigate()
 
-	console.log("USER",user )
+	// const { user, setUser } = useFirebaseAuth()
 
+	// 
+	//#region Login 
 
-	const login = async () => {
-		const test = await signInWithPopup(auth, provider)
-		console.log("TEST",test)
-		return
-		// const auth = await SignInApi({email : 'admins   @email.com', password : "testing1234"})
-		// console.log("DATA", auth )
-		// const user = auth?.user
+	const [loginData, setLoginData] = useState({
+		email : "",
+		password : "",
+	})
+
+	const onChangeLogin = (e : RCE<HTMLInputElement>) => {
+		const { name, value } = e.target
+		const clean_value = CleanText(value)
+		setLoginData(prev => ({...prev, [name] : clean_value }))
 	}
 
-	const logout = async () => {
-		const auth = await SignOutApi()
-		console.log("DATA", auth )
+	//#endregion
+	// 
+
+
+	const onSubmitLogin = async (e : React.FormEvent) => {
+		e.preventDefault()
+		const auth = await SignInApi(loginData)
+		if(auth){
+			navigate("/user", {replace : true})
+		}
 	}
+
 
 	return (
 		<>
-		
 		<div className={style.container}>
 			<div className={style.content}>
-				<Input />
-				<Input.Money/>
+			</div>
+			<div className={style.content}>
+				<Section.Blur>
+					<form onSubmit={onSubmitLogin}>
+						<h2 className='text-2xl mb-4'>Login</h2>
+						<hr/>
+						<Input.Text
+							type='email'
+							required
+							label='Email'
+							name='email'
+							onChange={onChangeLogin}
+							value={loginData.email}
+							placeholder='Email'/>
+						<Input.Text
+							required
+							label='Password'
+							name='password'
+							onChange={onChangeLogin}
+							value={loginData.password}
+							type='password'
+							placeholder='Password'/>
+						<div className='my-4 flex gap-4 justify-center'>
+							<Button.Action
+								type='submit'
+								className='flex-grow'>
+								LOGIN
+							</Button.Action>
+							<Button
+								className='flex-grow'>
+								SIGN UP
+							</Button>
+						</div>
+						<div className='m-4 flex gap-4 justify-center'>
+							<AuthProvider.Facebook onAuth={(e)=>{
+								console.log("test2",e)
+							}}/>
+							<AuthProvider.Google onAuth={(e)=>{
+								console.log("test3",e)
+							}}/>
+							<AuthProvider.Twitter onAuth={(e)=>{
+								console.log("test4",e)
+							}}/>
+							<AuthProvider.Github onAuth={(e)=>{
+								console.log("test5",e)
+							}}/>
+						</div>
+					</form>
+				</Section.Blur>
 			</div>
 		</div>
 
-		<button onClick={login}>
-				LOGIN
-			</button>
-			<button onClick={logout}>
-				LOGOUT
-			</button>
-			<CardContainer>
-				<Card>TEST</Card>
-				<Card>TEST</Card>
-				<Card>TEST</Card>
-			</CardContainer>
 		</>
 	)
 }

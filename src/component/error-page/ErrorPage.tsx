@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import style from './ErrorPage.module.scss'
 
 type ErrorPageType = {
-    code : number
+    code? : number
     message : string
     children? : ReactNode
 }
@@ -17,8 +17,12 @@ const ErrorPage = ({
   <div className={`${style.container}`}>
     <div className={style.content}>
         <div className="flex text-2xl">
+            {code && 
+            <>
             <div>{code}</div>
             <div className="mx-2 border border-white"></div>
+            </>
+            }
             <div>{message}</div>
         </div>
         {children && <hr className="mt-2"/>}
