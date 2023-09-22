@@ -1,0 +1,19 @@
+.container {
+	overflow: hidden;
+	transition: 0.2s ease-out;
+
+	ul {
+		list-style-type: square !important;
+		display: block;
+		font-size: .8rem;
+		font-style: italic;
+		color: gray;
+		font-weight: 600;
+	}
+}
+
+.error {
+	ul {
+		color : var(--error) !important;
+	}
+}

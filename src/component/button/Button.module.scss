@@ -14,7 +14,7 @@
 		background: none;
 		
 		&:hover {
-			background: var(--light-var);
+			background: var(--light);
 			box-shadow: var(--light) 0px 2px 5px;
 		}
 	}
@@ -32,7 +32,7 @@
 	}
 
 	.button {
-		border: 1px solid var(--dark-var);
+		border: 1px solid var(--dark);
 		background: none;
 		
 		&:hover {
