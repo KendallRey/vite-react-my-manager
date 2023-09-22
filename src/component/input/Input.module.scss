@@ -1,15 +1,19 @@
-
+$box-shadow-size : 0px 5px 10px;
 
 @media (prefers-color-scheme: light) {
 	.input {
 		border : 1px solid var(--light);
 
 		&:focus {
-			box-shadow: var(--light) 0px 5px 15px;
+			box-shadow: var(--light) $box-shadow-size;
 		}
 
 		&:hover {
-			box-shadow: var(--light) 0px 5px 15px;
+			box-shadow: var(--light) $box-shadow-size;
+		}
+
+		&:disabled {
+			background: var(--light);
 		}
 	}
 }
@@ -20,11 +24,15 @@
 		border : 1px solid var(--dark);
 
 		&:focus {
-			box-shadow: var(--dark) 0px 5px 15px;
+			box-shadow: var(--dark) $box-shadow-size;
 		}
 
 		&:hover {
-			box-shadow: var(--dark) 0px 5px 15px;
+			box-shadow: var(--dark) $box-shadow-size;
+		}
+
+		&:disabled {
+			background: var(--dark);
 		}
 	}
 }
@@ -41,6 +49,10 @@
 		color: white;
 		opacity: .5;
 		font-style: italic;
+	}
+
+	&:disabled {
+		box-shadow: none;
 	}
 }
 
