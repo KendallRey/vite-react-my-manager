@@ -52,6 +52,7 @@ export const FIREBASE_AUTHENTICATION_ERRORS = [
 	{ id: "auth/user-not-found", message: "User not found." },
 	{ id: "auth/too-many-requests", message: "Too many attemps, try again later." },
 	{ id: "auth/invalid-password", message: "Wrong email or password." },
+	{ id: "auth/wrong-password", message: "Wrong email or password." },
 	{ id: "auth/email-already-exists", message: "Email is already used." },
 	{ id: "auth/invalid-email", message: "Wrong email or password." },
 	{ id: "auth/invalid-email-verified", message: "Invalid email verified" },
