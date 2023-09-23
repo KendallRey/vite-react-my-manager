@@ -1,5 +1,4 @@
 import Card, { CardContainer } from '../../component/card/Card'
-import style from './CollectionPage.module.scss'
 
 const CollectionPage = () => {
 
