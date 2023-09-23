@@ -3,15 +3,16 @@ import { db,  } from "../FirebaseManager";
 import UserListItem, { UserListItemType } from "../../object/custom/UserListItemClass";
 import { useEffect, useState } from "react";
 
-const useUserListItem = (userId? : string) => {
+const useUserListItemList = (userId? : string, collectionId? : string) => {
 
 	const [userListItems, setUserListItems] = useState<UserListItemType[]>()
 
 	useEffect(() => {
 	
 		if(!userId) return
+		if(!collectionId) return
 
-		const collectionRef = collection(db,`col_users/${userId}/col_lists/`)
+		const collectionRef = collection(db,`col_lists/${userId}/${collectionId}/`)
 		
 		const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
 			const list : UserListItemType[] = []
@@ -26,11 +27,11 @@ const useUserListItem = (userId? : string) => {
 		return () => {
 			unsubscribe()
 		}
-	},[userId])
+	},[userId, collectionId])
 
 	return {
 		userListItems : userListItems
 	}
 }
 
-export default useUserListItem
+export default useUserListItemList

@@ -22,9 +22,9 @@ const SidebarLink = ( props : SidebarLinkType ) => {
 	return (
 		<button onClick={onClick}
 			disabled={active}
-			className={`${style.sidebar_link} ${active ? style.active : style.inactive}`}>
-			<span>{icon}</span>
-			{expand && title}
+			className={`${style.sidebar_link} ${active ? style.active : style.inactive} ${expand ? style.expand : style.collapse}`}>
+			{icon}
+			<span>{title}</span>
 		</button>
 	)
 }
@@ -44,9 +44,9 @@ const SidebarLinkDanger = ( props : SidebarLinkDangerType ) => {
 
 	return (
 		<button onClick={onClick}
-			className={`${style.sidebar_link} ${style.danger}`}>
-			<span>{icon}</span>
-			{expand && title}
+			className={`${style.sidebar_link} ${style.danger} ${expand ? style.expand : style.collapse}`}>
+			{icon}
+			<span>{title}</span>
 		</button>
 	)
 }

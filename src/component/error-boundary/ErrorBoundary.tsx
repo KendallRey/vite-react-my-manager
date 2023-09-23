@@ -1,47 +1,29 @@
-import { ReactNode, createContext, useState } from 'react';
-
-type ErrorBoundaryContextType = {
-    error : Error | null
-    setError : (message : string)=>void
+import { Component, ErrorInfo, ReactNode } from 'react';
+interface ErrorBoundaryProps {
+  children: ReactNode;
 }
 
-export const ErrorBoundaryContext  = createContext<ErrorBoundaryContextType>({
-	error : null,
-    setError : ()=>{},
-})
-type ErrorBoundaryType = {
-    children : ReactNode
+interface ErrorBoundaryState {
+  hasError: boolean;
 }
 
-const ErrorBoundary = ({ children } : ErrorBoundaryType) => {
-
-  const [_error, _setError] = useState<Error | null>(null)
-
-  const setError = (message :string | null) => {
-    if(message)
-        _setError(new Error(message))
-    else
-        _setError(null)
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
   }
 
-  if (_error) {
-    return (
-      <div>
-        <h2>Something went wrong</h2>
-        <p>{_error.message}</p>
-      </div>
-    )
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Error caught by error boundary:', error, errorInfo);
+    this.setState({ hasError: true });
   }
 
-  return (
-    <ErrorBoundaryContext.Provider
-        value={{
-            error : _error,
-            setError
-            }}>
-        {children}
-    </ErrorBoundaryContext.Provider>
-  )
+  render() {
+    if (this.state.hasError) {
+      return <div>Something went wrong.</div>;
+    }
+    return this.props.children;
+  }
 }
 
 export default ErrorBoundary;

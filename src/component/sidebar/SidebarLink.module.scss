@@ -1,12 +1,11 @@
 @media (prefers-color-scheme: light) {
 	.active {
-		color : var(--light-action);
-		span {
-			margin-right: 1rem;
-		}
+		color : var(--light-text);
+		background : var(--light-action);
 	}
 	.inactive {
 		color: var(--light-text);
+		border-color: var(--light) !important;
 		&:hover {
 			color : var(--light-action);
 		}
@@ -15,13 +14,12 @@
 
 @media (prefers-color-scheme: dark) {
 	.active {
-		color : var(--dark-action);
-		span {
-			margin-right: 1rem;
-		}
+		color : var(--dark-text);
+		background: var(--dark-action);
 	}
 	.inactive {
 		color: var(--dark-text);
+		border-color: var(--dark) !important;
 		&:hover {
 			color : var(--dark-action);
 		}
@@ -30,26 +28,37 @@
 
 
 .sidebar_link {
-	width: 100%;
+
 	display: flex;
 	align-items: center;
-	margin: 2rem 0;
+	margin: 1rem auto;
 	font-size: large;
-	// font-weight: 500;
-
+	border : 1px solid;
+	border-radius: .5rem;
+	min-height: 3rem;
+	overflow: hidden;
 	transition-duration: 200ms;
+	width: calc(100% - 20px);
 
-	&:hover {
+	&.expand {
+		// max-width: 3rem;
+
+	}
+	&.collapse {
+		width: 3rem;
 		span {
-			margin-right: 1rem;
+			display: none;
 		}
 	}
+
+	&:hover {
+
+	}
 	
-	span {
+	svg {
+		font-size: x-large;
 		transition-duration: 150ms;
-		svg {
-			font-size: x-large;
-		}
+		
 
 		width: 4rem;
 		display: flex;
