@@ -5,11 +5,9 @@ import Sidebar from "../component/sidebar/Sidebar"
 import SidebarLink from "../component/sidebar/SidebarLink"
 import { FaHome } from "react-icons/fa"
 import { MdLogout } from "react-icons/md"
-import { useEffect, useState } from "react"
 import { SignOutApi } from "../firebase/api/auth/AuthApi"
-import { GetUserListItemsApi } from "../firebase/api/documents/UserListItemApi"
-import { UserListItemType } from "../object/custom/UserListItemClass"
 import useUserListItem from "../firebase/hooks/UserListItemHook"
+import { useState } from "react"
 
 const AuthLayout = () => {
 
@@ -45,7 +43,7 @@ const AuthLayout = () => {
 	// 
 	//#region 
 
-	const [expand, setExpand] = useState(true)
+	const [expand] = useState(true)
 
 	//#endregion
 	// 
