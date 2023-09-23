@@ -2,6 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { Suspense, lazy } from 'react'
 
+// const ErrorBoundary = lazy(()=>import("./component/error-boundary/ErrorBoundary"))
+
 const LandingPage = lazy(()=>import("./pages/landing-page/LandingPage"))
 const DashboardPage = lazy(()=>import("./pages/dashboard-page/DashboardPage"))
 const AuthLayout = lazy(()=>import("./layout/AuthLayout"))
@@ -22,12 +24,13 @@ function App() {
 				</Routes>
 			</Suspense>
 			
-			<Suspense fallback={<div>Loading...</div>}>
-				<Routes>
-					<Route path='user' element={<AuthLayout/>}>
-						<Route index element={<DashboardPage/>}/>
-					</Route>
-				</Routes>
+			<Suspense fallback={<div>...</div>}>
+					<Routes>
+						<Route path='user' element={<AuthLayout/>}>
+							<Route index element={<DashboardPage/>}/>
+							<Route index element={<></>}/>
+						</Route>
+					</Routes>
 			</Suspense>
 		</BrowserRouter>
 	)
