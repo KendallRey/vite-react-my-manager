@@ -1,6 +1,37 @@
+@media (prefers-color-scheme: light) {
+    .container {
+        border-color: var(--light-action) !important;
+        box-shadow: var(--light)0px 5px 15px;
+        background: var(--light-var);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        border-color: var(--dark-action) !important;
+        box-shadow: var(--dark)0px 5px 15px;
+        background: var(--dark-var);
+    }
+}
+
 
 .container {
+    position: fixed;
+    top : 0;
+    bottom : 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 6rem;
+    // border-right: .1rem solid;
+
+    transition-duration: 200ms;
+}
+
+.expand {
+    width: 15rem;
+}
+
+.collapse {
+    width: 5rem;
 }

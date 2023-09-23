@@ -17,10 +17,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app)
-export const db = getFirestore(app)
-export const realtimeDB = getDatabase(app, import.meta.env.VITE_DATABASE_URL)
-export default app
+export const auth = getAuth(firebaseApp)
+export const db = getFirestore(firebaseApp)
+export const realtimeDB = getDatabase(firebaseApp, import.meta.env.VITE_DATABASE_URL)
+export default firebaseApp
