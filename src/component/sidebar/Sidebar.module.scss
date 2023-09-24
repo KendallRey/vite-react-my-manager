@@ -1,16 +1,16 @@
 @media (prefers-color-scheme: light) {
     .container {
         border-color: var(--light-action) !important;
-        box-shadow: var(--light)0px 5px 15px;
-        background: var(--light-var);
+        // box-shadow: var(--light) 0px 5px 15px;
+        background: var(--light-5);
     }
 }
 
 @media (prefers-color-scheme: dark) {
     .container {
         border-color: var(--dark-action) !important;
-        box-shadow: var(--dark)0px 5px 15px;
-        background: var(--dark-var);
+        // box-shadow: var(--dark) 0px 5px 15px;
+        background: var(--dark-5);
     }
 }
 

@@ -29,7 +29,7 @@ const BulletList = (props : BulletListType) => {
 				return
 			}
 			setMaxHeight(`${items.length * 20}px`)
-		},500)
+		}, 200)
 		return () => {
 			clearTimeout(interval)
 		}

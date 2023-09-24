@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { Suspense, lazy } from 'react'
 import ErrorBoundary from './component/error-boundary/ErrorBoundary'
-import ErrorPage from './component/error-page/ErrorPage'
+
 
 // const ErrorBoundary = lazy(()=>import("./component/error-boundary/ErrorBoundary"))
 
@@ -41,9 +41,11 @@ function App() {
 								</ErrorBoundary>
 							}/>
 						</Route>
+						{/* 
 						<Route path='*' element={
 							<ErrorPage code={404} message='Page not found'/>
 						}/>
+						*/}
 					</Routes>
 			</Suspense>
 		</BrowserRouter>

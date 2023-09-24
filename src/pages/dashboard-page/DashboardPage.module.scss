@@ -1,0 +1,17 @@
+@media (prefers-color-scheme: light) {
+    .container {
+        background: var(--light-var);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: var(--dark-var);
+    }
+}
+
+
+.container {
+    padding: var(--page-container-margin);
+    min-height: 100vh;
+}

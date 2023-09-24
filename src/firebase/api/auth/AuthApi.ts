@@ -1,6 +1,9 @@
 import { signInWithEmailAndPassword, signOut } from "@firebase/auth"
-import { auth } from "../../FirebaseManager"
 import { FIREBASE_AUTHENTICATION_ERRORS } from "../../AuthErrorList"
+import firebaseApp from "../../FirebaseManager"
+import { getAuth } from "firebase/auth"
+
+const auth = getAuth(firebaseApp)
 
 type SignInApiType = {
 	email : string
@@ -17,7 +20,6 @@ const SignInApi = async ({
 	})
 	.catch((error) => {
 		
-		console.log("12312312",error.code)
 		try {
 			const error_match = FIREBASE_AUTHENTICATION_ERRORS.find((item) => item.id === error.code)
 			if(error_match)

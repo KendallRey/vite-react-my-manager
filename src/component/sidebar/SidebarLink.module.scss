@@ -1,27 +1,34 @@
 @media (prefers-color-scheme: light) {
 	.active {
-		color : var(--light-text);
+		color : var(--light-action-text);
 		background : var(--light-action);
+		border-color: var(--light-action) !important;
+		
 	}
 	.inactive {
 		color: var(--light-text);
 		border-color: var(--light) !important;
+		box-shadow: var(--light) var(--box-shadow-size-md);
 		&:hover {
 			color : var(--light-action);
+			box-shadow: var(--light) var(--box-shadow-size-lg);
 		}
 	}
 }
 
 @media (prefers-color-scheme: dark) {
 	.active {
-		color : var(--dark-text);
+		color : var(--dark-action-text);
 		background: var(--dark-action);
+		border-color: var(--dark-action) !important;
 	}
 	.inactive {
 		color: var(--dark-text);
 		border-color: var(--dark) !important;
+		box-shadow: var(--dark) var(--box-shadow-size-md);
 		&:hover {
 			color : var(--dark-action);
+			box-shadow: var(--dark) var(--box-shadow-size-lg);
 		}
 	}
 }
@@ -51,8 +58,8 @@
 		}
 	}
 
-	&:hover {
-
+	&:active {
+		box-shadow: none;
 	}
 	
 	svg {
