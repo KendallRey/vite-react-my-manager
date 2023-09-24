@@ -16,7 +16,6 @@ const AuthLayout = () => {
 	
 	const activePath = useMemo(() => {
 		const clean_path = pathname.replace("/user","")
-		console.log("d",clean_path)
 		return clean_path
 	},[pathname])
 

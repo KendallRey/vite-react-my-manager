@@ -1,7 +1,9 @@
-import { collection, onSnapshot } from "firebase/firestore";
-import { db,  } from "../FirebaseManager";
+import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import UserListItem, { UserListItemType } from "../../object/custom/UserListItemClass";
 import { useEffect, useState } from "react";
+import firebaseApp from "../FirebaseManager";
+
+const db = getFirestore(firebaseApp)
 
 const useUserListItem = (userId? : string) => {
 

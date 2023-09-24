@@ -1,0 +1,34 @@
+@media (prefers-color-scheme: light) {
+	.routes {
+		button {
+			color: var(--light-text);
+			&:hover {
+				color: var(--light-action);
+			}
+		}
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.routes {
+		button {
+			color: var(--dark-text);
+			&:hover {
+				color: var(--dark-action);
+			}
+		}
+	}
+}
+
+.container {
+	margin: 1rem 0;
+	h1 {
+		font-size: 2rem;
+	}
+}
+
+.routes {
+	button {
+		margin: 0 .5rem;
+	}
+}

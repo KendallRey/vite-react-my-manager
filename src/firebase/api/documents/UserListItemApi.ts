@@ -1,6 +1,8 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../FirebaseManager";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 import UserListItem, { UserListItemType } from "../../../object/custom/UserListItemClass";
+import firebaseApp from "../../FirebaseManager";
+
+const db = getFirestore(firebaseApp)
 
 export const GetUserListItemsApi = async (userId : string) => {
 

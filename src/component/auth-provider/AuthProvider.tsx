@@ -3,7 +3,11 @@ import { SignInWithFacebook, SignInWithGithub, SignInWithGoogle, SignInWithTwitt
 import style from './AuthProvider.module.scss'
 import { FcGoogle } from 'react-icons/fc'
 import { FaFacebook, FaTwitter, FaGithub } from 'react-icons/fa' 
-import { auth } from '../../firebase/FirebaseManager'
+
+import { getAuth } from "firebase/auth"
+import firebaseApp from '../../firebase/FirebaseManager'
+
+const auth = getAuth(firebaseApp)
 
 // 
 // npm install react-icons --save

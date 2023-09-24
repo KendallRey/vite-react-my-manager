@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
-import { auth } from "../../FirebaseManager"
 import { User } from "@firebase/auth"
 import { useNavigate } from "react-router-dom"
+import firebaseApp from "../../FirebaseManager"
+import { getAuth } from "firebase/auth"
+
+const auth = getAuth(firebaseApp)
 
 type UseFirebaseAuthType = {
 	redirect? : string
