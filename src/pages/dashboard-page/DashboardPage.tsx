@@ -1,11 +1,7 @@
 import { AiFillClockCircle } from 'react-icons/ai'
-import Grid from '../../component/grid/Grid'
 import style from './DashboardPage.module.scss'
 import PieChart from '../../component/chart/pie-chart/PieChart'
 import BulletList from '../../component/bullet-list/BulletList'
-import { useNavigate } from 'react-router-dom'
-import useFirebaseAuth from '../../firebase/api/auth/AuthHook'
-import useUserListItem from '../../firebase/hooks/UserListItemHook'
 import Flex from '../../component/flex/Flex'
 import PageHeader from '../../component/page-header/PageHeader'
 
@@ -20,15 +16,10 @@ const DashboardPage = () => {
 	// 
 	//#region Redirect User
 
-	const navigate = useNavigate()
-	const { user } = useFirebaseAuth({ fallback_to : "/"})
 	
 	//#endregion
 	// 
 
-	const { userListItems } = useUserListItem(user?.uid)
-
-	
 
 	return (
 		<div className={style.container}>
