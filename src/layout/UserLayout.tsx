@@ -105,7 +105,7 @@ const AuthLayout = () => {
 			{userListItems?.map((item) => {
 				return (
 					<SidebarLink
-						active={activePath === `/${item.id}`}
+						active={activePath.includes(`/${item.id}`)}
 						key={item.id}
 						expand={expand}
 						icon={<FaHome/>}

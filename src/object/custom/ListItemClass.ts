@@ -1,5 +1,5 @@
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
-import Item, { ItemSchema } from "../ItemClass";
+import Item, { ItemCreateSchema, ItemSchema } from "../ItemClass";
 
 export default class ListItem extends Item {
 
@@ -43,6 +43,27 @@ export default class ListItem extends Item {
 		return await ListItemSchema.validate(data)
 	}
 
+	async createDoc(user_id : string, data : any) {
+		try {
+			const meta_data = await super.setCreateMetadata(user_id)
+			const clean_data = await ListItemCreateSchema.validate(data)
+			const data_to_post = {
+				...meta_data,
+				...clean_data,
+			}
+			return {
+				status : "SUCCESS" as "SUCCESS" | "ERROR",
+				data : data_to_post,
+			}
+		}
+		catch (err : any) {
+			return {
+				status : "ERROR" as "SUCCESS" | "ERROR",
+				errors : err.errors as string[]
+			}
+		}
+	}
+
 	//#endregion
 	// 
 }
@@ -63,4 +84,18 @@ export const ListItemSchema = object({
 		.max(50, "Too long, max : 50 characters"),
 }).concat(ItemSchema)
 
+export const ListItemCreateSchema = object({
+	title :
+		string()
+		.required("Title is required!")
+		.max(12, "Too long, max 12 characters")
+		.min(3, "Too short, min 3 characters"),
+	thumbnail : 
+		string(),
+	description :
+		string()
+		.max(50, "Too long, max : 50 characters"),
+})
+
+export type ListItemCreateType = InferType<typeof ListItemCreateSchema>
 export type ListItemType = InferType<typeof ListItemSchema>

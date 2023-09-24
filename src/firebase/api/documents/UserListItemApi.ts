@@ -1,4 +1,4 @@
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import UserListItem, { UserListItemType } from "../../../object/custom/UserListItemClass";
 import firebaseApp from "../../FirebaseManager";
 
@@ -27,5 +27,27 @@ export const GetUserListItemsApi = async (userId : string) => {
 	}
 	catch (err) {
 		console.log("test2",err)
+	}
+}
+
+// 
+// Not really a delete but rather archiving it,
+// for obvious reason
+// 
+
+export const DeleteUserListItemsApi = async (userId : string, documentId : string) => {
+
+	try {
+		const documentRef = doc(db,`col_users/${userId}/col_lists/`, documentId)
+		
+		return await updateDoc(documentRef, {
+			archived : true
+			})
+			.then(() => true)
+			.catch(() => false)
+
+	}
+	catch (err) {
+		return false
 	}
 }

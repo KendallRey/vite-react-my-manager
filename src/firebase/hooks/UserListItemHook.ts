@@ -1,4 +1,4 @@
-import { collection, getFirestore, onSnapshot } from "firebase/firestore";
+import { collection, getFirestore, onSnapshot, query, where } from "firebase/firestore";
 import UserListItem, { UserListItemType } from "../../object/custom/UserListItemClass";
 import { useEffect, useState } from "react";
 import firebaseApp from "../FirebaseManager";
@@ -14,8 +14,9 @@ const useUserListItem = (userId? : string) => {
 		if(!userId) return
 
 		const collectionRef = collection(db,`col_users/${userId}/col_lists/`)
-		
-		const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+		const q = query(collectionRef, where('archived', '==', false))
+
+		const unsubscribe = onSnapshot(q, (snapshot) => {
 			const list : UserListItemType[] = []
 			snapshot.forEach( async (doc) => {
 				const _doc = new UserListItem().toDoc(doc)

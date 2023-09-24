@@ -38,7 +38,25 @@ const ButtonAction = (props : ButtonType) => {
 	)
 }
 
+const ButtonDanger = (props : ButtonType) => {
+
+	const {
+		className,
+		children,
+		...cleanProps
+	} = props
+
+	return (
+		<Button className={`${style.danger} ${className ?? ""}`}
+			type='button'
+			{...cleanProps}>
+			{children}
+		</Button>
+	)
+}
+
 export default Object.assign(Button, {
-	Action : ButtonAction
+	Action : ButtonAction,
+	Danger : ButtonDanger,
 })
 

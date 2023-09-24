@@ -9,6 +9,8 @@ import ErrorBoundary from './component/error-boundary/ErrorBoundary'
 const LandingPage = lazy(()=>import("./pages/landing-page/LandingPage"))
 const DashboardPage = lazy(()=>import("./pages/dashboard-page/DashboardPage"))
 const CollectionPage = lazy(()=>import("./pages/collection-page/CollectionPage"))
+const CollectionCreateItemPage = lazy(()=>import("./pages/collection-create-item-page/CollectionCreateItemPage"))
+
 const UserLayout = lazy(()=>import("./layout/UserLayout"))
 const Layout = lazy(()=>import("./layout/Layout"))
 
@@ -38,6 +40,11 @@ function App() {
 							<Route path=':collection_id' element={
 								<ErrorBoundary>
 									<CollectionPage/>
+								</ErrorBoundary>
+							}/>
+							<Route path=':collection_id/create' element={
+								<ErrorBoundary>
+									<CollectionCreateItemPage/>
 								</ErrorBoundary>
 							}/>
 						</Route>
