@@ -17,6 +17,7 @@ const Layout = () => {
 	console.log("1", user)
 	console.log("2", user)
 	console.log("3", user)
+	console.log("4", user)
 
 	if(user === undefined)
 		return (
