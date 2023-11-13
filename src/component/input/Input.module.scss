@@ -54,6 +54,10 @@ $box-shadow-size : 0px 5px 10px;
 	&:disabled {
 		box-shadow: none;
 	}
+
+	&:invalid {
+		border-color: var(--danger) !important;
+	}
 }
 
 .input_container {

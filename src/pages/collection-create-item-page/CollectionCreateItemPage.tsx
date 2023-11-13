@@ -66,6 +66,7 @@ const CollectionCreateItemPage = () => {
 					<Input.Text
 						required
 						name='title'
+						minLength={3}
 						value={item.title}
 						onChange={onChangeItem}
 						label='Title' />
