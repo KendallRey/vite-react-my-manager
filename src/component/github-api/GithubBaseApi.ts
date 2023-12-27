@@ -8,6 +8,7 @@ export const OctokitInstance = async (props : OctokitInstanceType) => {
     return await octokit.request(`${type} ${apiUrl}`, {
         owner: props.owner ?? '',
         repo: props.repo ?? '',
+        org: props.org ?? '',
         headers: {
           'X-GitHub-Api-Version': '2022-11-28'
         }

@@ -8,6 +8,7 @@ export type OctokitInstanceType = {
     apiUrl: string
     repo? : string;
     owner? : string;
+    org?: string;
 }
 
 export type GithubRequestApi = Omit<OctokitInstanceType, 'type' | 'apiUrl'>
