@@ -38,6 +38,8 @@ const RepoIssuesPage = () => {
 		const selected = repositories.find((repo) => repo.id.toString() === value);
 		if(!selected) return;
 
+		setLabels(undefined);
+		ClearIssues();
 		setSelectedRepository(selected);
 	}
 	//#endregion
@@ -81,13 +83,18 @@ const RepoIssuesPage = () => {
 
 	//#region Issues
 
-	const [issues, setIssues] = useState<GitHubIssue[]>()
+	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
 
 	const GetRepositoryIssues = async () => {
 		if(!selectedRepository) return;
+		setIssues(undefined);
 		const data = await OctoGetRepositoryIssuesApi({
 			owner: selectedRepository.owner.login,
 			repo : selectedRepository.name,
+			params: {
+				sort: 'created',
+				direction: 'asc',
+			}
 		})
 		if(data === null) return;
 		setIssues(data);
@@ -97,8 +104,8 @@ const RepoIssuesPage = () => {
 	//#endregion
 
 	return (
-		<div className='flex flex-col m-2 gap-2'>
-			<div className='flex flex-wrap gap-2'>
+		<div className='flex flex-col m-2 gap-5'>
+			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
 					<form id='get-repositories-form' onSubmit={GetRepositories}>
 					<Input.Text label='Organization' value={ownerName} required onChange={({target})=>{setOwnerName(target.value)}}/>
@@ -106,7 +113,7 @@ const RepoIssuesPage = () => {
 					</form>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<Select label='Select Repository' value={selectedRepository?.id ?? ''} onChange={OnSelectRepository}>
+					<Select required label={`Select Repository (${repositories?.length ?? 0})`} value={selectedRepository?.id ?? ''} onChange={OnSelectRepository}>
 						<option value={''} disabled>...</option>
 						{repositories?.map((repo) => <option key={repo.id} value={repo.id}>{repo.name}</option>)}
 					</Select>
@@ -123,7 +130,7 @@ const RepoIssuesPage = () => {
 					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtrative' checked={format.isLabelFilterSubtrative} onChange={OnChangeFormatCheck}/>
 				</Section.Blur>
 			</div>
-			{<IssueList issues={issues ?? []} labels={labels} format={format}/>}
+			{<IssueList issues={issues} labels={labels} format={format}/>}
 		</div>
 	)
 }

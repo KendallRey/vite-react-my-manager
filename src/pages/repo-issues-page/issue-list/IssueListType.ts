@@ -3,7 +3,7 @@ import { GitHubLabel } from "../../../component/github-api/response-type/GithubL
 import { IssueDiscordFormatType } from "../RepoIssuesPageType";
 
 export type IssueListType = {
-    issues: GitHubIssue[];
+    issues?: GitHubIssue[];
     labels? : GitHubLabel[];
     format: IssueDiscordFormatType;
 }

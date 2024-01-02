@@ -9,6 +9,9 @@ export type OctokitInstanceType = {
     repo? : string;
     owner? : string;
     org?: string;
+    params?: OctokitInstanceTypeParams
 }
+
+export type OctokitInstanceTypeParams = {[name : string] : string | number | boolean}
 
 export type GithubRequestApi = Omit<OctokitInstanceType, 'type' | 'apiUrl'>

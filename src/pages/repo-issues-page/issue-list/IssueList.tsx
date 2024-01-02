@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Section from "../../../component/section/Section"
 import Select from "../../../component/select/Select";
 import { IssueListType } from "./IssueListType"
 import { GitHubLabel } from "../../../component/github-api/response-type/GithubLabelType";
+import Button from "../../../component/button/Button";
 
 const IssueList = (props : IssueListType) => {
 
@@ -20,11 +21,17 @@ const IssueList = (props : IssueListType) => {
         setAddedLabels(prev => prev.concat(selected));
     }
 
+    useEffect(() => {
+        setAddedLabels([]);
+    }, [labels])
+
     const OnRemoveLabel = (id: number) => setAddedLabels(prev => prev.filter(label => label.id !== id));
+
+    const OnClearLabels = () => setAddedLabels([])
 
     const filteredIssues = useMemo(() => {
         if(addedLabelsIDs.length === 0) return issues;
-        return issues.filter((item) => {
+        return issues?.filter((item) => {
             const _labelsIDs = item.labels.map((item) => item.id)
             if(format.isLabelFilterSubtrative)
                 return addedLabelsIDs.every((labelID) => _labelsIDs.includes(labelID));
@@ -43,6 +50,9 @@ const IssueList = (props : IssueListType) => {
                 {item.name}
                 </option>)}
         </Select>
+        <Button.Action className="p-1 my-1 rounded text-xs" onClick={OnClearLabels}>
+            Clear Filter/s
+        </Button.Action>
         <div className="flex flex-wrap gap-2">
             {addedLabels.map((item) => {
             const color = `#${item.color}`
@@ -58,7 +68,13 @@ const IssueList = (props : IssueListType) => {
         }
         <hr className="my-2"/>
         <div className="my-2">
-        {filteredIssues.map((issue) => {
+        <span>Issue/s ({filteredIssues?.length})</span>
+        <hr/>
+        {filteredIssues === undefined ?
+        <div className="text-center text-2xl">Loading . . .</div> :
+        filteredIssues.length === 0 ?
+        <div className="text-center text-2xl">No Issue/s found.</div> :
+        filteredIssues.map((issue) => {
             return (
                 <div key={issue.id}>
                     {format.isLinkRemove ?
@@ -67,7 +83,7 @@ const IssueList = (props : IssueListType) => {
                     </>
                     :
                     <>
-                    - __[{format.prefix}{issue.number}{format.suffix}]({issue.html_url})__ {issue.title}
+                    - __[{format.prefix}{issue.number}{format.suffix}](<a href={issue.html_url} target="_blank" rel="noopener noreferrer">{issue.html_url}</a>)__ {issue.title}
                     </>
                     }
                 </div>
