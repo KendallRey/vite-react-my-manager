@@ -12,6 +12,9 @@ import { OctoGetRepositoryLabelsApi } from '../../component/github-api/repositor
 import { GitHubLabel } from '../../component/github-api/response-type/GithubLabelType'
 import { IssueDiscordFormatType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
+import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
+import React from 'react'
+import { GITHUB_FIELDS } from './issue-list/custom-item/GithubIssueItemFields'
 
 const RepoIssuesPage = () => {
 
@@ -103,8 +106,45 @@ const RepoIssuesPage = () => {
 	const ClearIssues = () => setIssues([]);
 	//#endregion
 
+	// 
+	// #region Custom Format (With Presets)
+
+	const [customFormats, setCustomFormats] = useState<FormatItem[]>([]);
+	
+	const onAddCustomFormat = () => {
+		const date = new Date();
+		const newID = date.toISOString() + date.getMilliseconds();
+		setCustomFormats(prev => prev.concat({
+			id:  newID,
+			name: '...',
+			type: 'TEXT',
+			value: '',
+		}))
+	}
+
+	const onChangeCustomFormat = (id: string, e: RCE<HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setCustomFormats(prev => ([...prev.map((item) => {
+				if(item.id === id){
+					return {
+						...item,
+						[name]: value,
+					};
+				}
+				return item;
+			})]
+		))
+	}
+
+	// #endregion
+	// 
+
+
 	return (
+		<>
 		<div className='flex flex-col m-2 gap-5'>
+	
+
 			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
 					<form id='get-repositories-form' onSubmit={GetRepositories}>
@@ -129,9 +169,40 @@ const RepoIssuesPage = () => {
 					<Checkbox label='Remove Link' name='isLinkRemove' checked={format.isLinkRemove} onChange={OnChangeFormatCheck}/>
 					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtrative' checked={format.isLabelFilterSubtrative} onChange={OnChangeFormatCheck}/>
 				</Section.Blur>
+				<Section.Blur className='flex gap-4 flex-grow'>
+					<Button.Action onClick={onAddCustomFormat}>
+						Add Format
+					</Button.Action>
+					<hr/>
+					{customFormats.map((fm) => {
+						return (
+							<React.Fragment key={fm.id}>
+								<select name='type' onChange={(e)=>onChangeCustomFormat(fm.id, e)}>
+									<option value={''}>
+										...
+									</option>
+									<option value={'TEXT'}>
+										Text
+									</option>
+									<option value={'FIELD'}>
+										Field
+									</option>
+								</select>
+								<select name='value' onChange={(e)=>onChangeCustomFormat(fm.id, e)}>
+									{GITHUB_FIELDS.map((field) => 
+									<option key={field.value} value={field.value}>
+										{field.name}
+									</option>
+									)}
+								</select>
+							</React.Fragment>
+							)
+					})}
+				</Section.Blur>
 			</div>
-			{<IssueList issues={issues} labels={labels} format={format}/>}
+			{<IssueList issues={issues} labels={labels} format={format} formats={[]}/>}
 		</div>
+		</>
 	)
 }
 

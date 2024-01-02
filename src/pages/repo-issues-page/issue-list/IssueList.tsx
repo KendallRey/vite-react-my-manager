@@ -4,10 +4,14 @@ import Select from "../../../component/select/Select";
 import { IssueListType } from "./IssueListType"
 import { GitHubLabel } from "../../../component/github-api/response-type/GithubLabelType";
 import Button from "../../../component/button/Button";
+import IssueItem from "./IssueItem";
+import { GITHUB_COLORABLE_TEXT_STYLE, GITHUB_HEX_OPACITY } from "../../../utils/GithubColor";
+import CustomIssueItem from "./custom-item/CustomIssueItem";
+import { DiscordFormatPreset } from "./preset-formats/DiscordFormat";
 
 const IssueList = (props : IssueListType) => {
 
-    const { issues, labels, format } = props;
+    const { issues, labels, format,  } = props;
 
     const [addedLabels, setAddedLabels] = useState<GitHubLabel[]>([])
     const addedLabelsIDs = useMemo(() => addedLabels.map(item => item.id),[addedLabels])
@@ -57,8 +61,8 @@ const IssueList = (props : IssueListType) => {
             {addedLabels.map((item) => {
             const color = `#${item.color}`
                 return (
-                    <div key={item.id} className="p-1 rounded" style={{ background: `${color}98` }}>
-                        <span style={{color:color, filter: 'brightness(10)'}}>{item.name}</span>
+                    <div key={item.id} className="p-1 rounded" style={{ background: `${color}${GITHUB_HEX_OPACITY}` }}>
+                        <span style={{color:color, filter: GITHUB_COLORABLE_TEXT_STYLE}}>{item.name}</span>
                         <button className="mx-2" onClick={()=>OnRemoveLabel(item.id)}>X</button>
                     </div>
                     )
@@ -76,17 +80,7 @@ const IssueList = (props : IssueListType) => {
         <div className="text-center text-2xl">No Issue/s found.</div> :
         filteredIssues.map((issue) => {
             return (
-                <div key={issue.id}>
-                    {format.isLinkRemove ?
-                    <>
-                    - {format.prefix}{issue.number}{format.suffix} {issue.title}
-                    </>
-                    :
-                    <>
-                    - __[{format.prefix}{issue.number}{format.suffix}](<a href={issue.html_url} target="_blank" rel="noopener noreferrer">{issue.html_url}</a>)__ {issue.title}
-                    </>
-                    }
-                </div>
+                <CustomIssueItem key={issue.id} issue={issue} formats={DiscordFormatPreset.formats}/>
             )
         })}
         </div>
