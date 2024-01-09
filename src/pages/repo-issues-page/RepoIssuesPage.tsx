@@ -15,10 +15,23 @@ import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { GITHUB_FIELDS } from './issue-list/custom-item/GithubIssueItemFields'
+import { useDispatch, useSelector } from 'react-redux'
+import { editParams, getGithubParams } from '../../redux/GithubParamsReducer'
 
 const RepoIssuesPage = () => {
 
 	//#region Repository
+	const dispatch = useDispatch();
+	const githubToken = useSelector(getGithubParams);
+
+	console.log("TTT", githubToken)
+	const onChangeToken = (e: RCE<HTMLInputElement>) => {
+		const { value } = e.target;
+		console.log("yrdyr", value)
+		dispatch(editParams({ token: value }))
+	}
+
+	const [token, setToken] = useState<string>("")
 	const [ownerName, setOwnerName] = useState("")
 
 	const [repositories, setRepositories] = useState<GitHubRepository[]>()
@@ -26,7 +39,8 @@ const RepoIssuesPage = () => {
 	const GetRepositories = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const data = await OctoGetRepositoriesApi({
-			org: ownerName
+			org: ownerName,
+			token,
 		})
 		if(data === null) return;
 		setRepositories(data)
@@ -77,6 +91,7 @@ const RepoIssuesPage = () => {
 		const data = await OctoGetRepositoryLabelsApi({
 			owner: selectedRepository.owner.login,
 			repo : selectedRepository.name,
+			token,
 		})
 		if(data === null) return;
 		setLabels(data);
@@ -94,6 +109,7 @@ const RepoIssuesPage = () => {
 		const data = await OctoGetRepositoryIssuesApi({
 			owner: selectedRepository.owner.login,
 			repo : selectedRepository.name,
+			token,
 			params: {
 				sort: 'created',
 				direction: 'asc',
@@ -148,6 +164,7 @@ const RepoIssuesPage = () => {
 			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
 					<form id='get-repositories-form' onSubmit={GetRepositories}>
+					<Input.Text label='Token' required onChange={onChangeToken}/>
 					<Input.Text label='Organization' value={ownerName} required onChange={({target})=>{setOwnerName(target.value)}}/>
 					<Button.Action form='get-repositories-form' type='submit'>Get Repositories</Button.Action>
 					</form>

@@ -10,6 +10,7 @@ export type OctokitInstanceType = {
     owner? : string;
     org?: string;
     params?: OctokitInstanceTypeParams
+    token?: string
 }
 
 export type OctokitInstanceTypeParams = {[name : string] : string | number | boolean}
