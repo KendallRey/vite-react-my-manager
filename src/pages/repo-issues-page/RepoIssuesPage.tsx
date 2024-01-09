@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { OctoGetRepositoryIssuesApi } from '../../component/github-api/repository-issues/RepositoryIssuesApi'
 import { GitHubIssue } from '../../component/github-api/response-type/GithubIssueType'
 import Button from '../../component/button/Button'
@@ -16,20 +16,22 @@ import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { GITHUB_FIELDS } from './issue-list/custom-item/GithubIssueItemFields'
 import { useDispatch, useSelector } from 'react-redux'
-import { editParams, getGithubParams } from '../../redux/GithubParamsReducer'
+import { editParams, getGithubParams, githubParamsSlice } from '../../redux/GithubParamsReducer'
 
 const RepoIssuesPage = () => {
 
 	//#region Repository
 	const dispatch = useDispatch();
-	const githubToken = useSelector(getGithubParams);
-
+	const githubToken = useSelector(state => state.params);
 	console.log("TTT", githubToken)
+	
 	const onChangeToken = (e: RCE<HTMLInputElement>) => {
 		const { value } = e.target;
 		console.log("yrdyr", value)
-		dispatch(editParams({ token: value }))
+		dispatch(editParams({ token: value, bntu: value }))
 	}
+
+	console.log("teste", githubParamsSlice.getInitialState())
 
 	const [token, setToken] = useState<string>("")
 	const [ownerName, setOwnerName] = useState("")

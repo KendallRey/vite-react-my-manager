@@ -8,37 +8,42 @@ type ActionType = {
 }
 
 export type GithubParamsSliceType = {
-    token?: string | undefined;
+    token: string[];
 }
 
 type CaseReducers = {
     editParams : (state: GithubParamsSliceType, action: ActionType) => void;
 }
 
-const _editParams = (state: GithubParamsSliceType, action: ActionType) => {
-  console.log("teset22",action )
+const _editParams = (state: any, action: ActionType) => {
+  
+  console.log("B",state)
+
   state = {
+    token: '123',
     ...state,
     ...action.payload,
   }
+  console.log("A",state )
 }
 
 type CaseSeletors = {
-  getGithubParams : (state: { params: GithubParamsSliceType }) => any;
-}
+  getGithubParams: (state: any) => GithubParamsSliceType;
+};
 
-export const getGithubParams = (state: { params: GithubParamsSliceType }) => state.params;
+const _getGithubParams = (state: { params: GithubParamsSliceType }) => state.params;
 
-const githubParamsSlice = createSlice<GithubParamsSliceType, CaseReducers, 'params', any, 'params'>({
+export const githubParamsSlice = createSlice({
   name: 'params',
-  initialState: {
-    token: undefined,
-  },
+  initialState: [],
   reducers: {
-    editParams : _editParams,
-  },
-  selectors:{
-    getGithubParams
+    editParams(state, action){
+      
+      console.log("S",state)
+      console.log("B",state.token)
+      console.log("A",action)
+      state.push(action.payload)
+    },
   },
 })
 
