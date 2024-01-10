@@ -10,7 +10,7 @@ import { GitHubRepository } from '../../component/github-api/response-type/Githu
 import Select from '../../component/select/Select'
 import { OctoGetRepositoryLabelsApi } from '../../component/github-api/repository-labels/RepositoryLabelsApi'
 import { GitHubLabel } from '../../component/github-api/response-type/GithubLabelType'
-import { IssueDiscordFormatType } from './RepoIssuesPageType'
+import { IssueDiscordFilter, IssueDiscordFormatType, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
@@ -97,6 +97,58 @@ const RepoIssuesPage = () => {
 	}
 
 	//#endregion
+
+	// 
+	// #region Filters
+
+	const [filter, setFilter] = useState<IssueDiscordFilter>({
+		isOn: false,
+		[TITLE_FILTER_TYPE_EXCLUDES]: [],
+		[TITLE_FILTER_TYPE_INCLUDES]: [],
+	})
+
+	const onToggleFilter = (e: RCE<HTMLInputElement>) => {
+		const { checked } = e.target;
+		setFilter(prev => ({...prev, isOn: checked}))
+	}
+
+	const onAddFilter = (type : TitleFilterType) => {
+		const date = new Date();
+		const newID = date.getMilliseconds()+date.getSeconds()+'-filter'
+		setFilter(prev => ({...prev,
+			[type]: prev[type].concat({
+				id: newID,
+				value: '',
+			})
+		}))
+	}
+
+	const onRemoveFilter = (id: string, type : TitleFilterType) => {
+		setFilter(prev => ({...prev,
+			[type]: prev[type].filter(item => item.id !== id)
+		}))
+	}
+
+	const onChangeFilter = (id: string, type : TitleFilterType, e: RCE<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFilter(prev => (
+			{...prev, 
+				[type]: prev[type]
+				.map((item) => {
+					if(item.id === id){
+						return {
+							...item,
+							[name]: value
+						}
+					}
+					return item;
+				})
+			}
+		))
+	}
+
+	// #endregion
+	// 
 
 	//#region Issues
 
@@ -185,8 +237,55 @@ const RepoIssuesPage = () => {
 					<Checkbox label='Remove Link' name='isLinkRemove' checked={format.isLinkRemove} onChange={OnChangeFormatCheck}/>
 					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtrative' checked={format.isLabelFilterSubtrative} onChange={OnChangeFormatCheck}/>
 				</Section.Blur>
+				<Section.Blur className='gap-4 flex-grow'>
+					<Checkbox label='Toggle Filter' name='isOn' checked={filter.isOn} onChange={onToggleFilter}/>
+					<div className='flex gap-4 mb-2 flex-wrap'>
+					<Button className='flex-grow'
+						onClick={()=>onAddFilter(TITLE_FILTER_TYPE_INCLUDES)}>
+						ADD INCLUDES
+					</Button>
+					<Button className='flex-grow'
+						onClick={()=>onAddFilter(TITLE_FILTER_TYPE_EXCLUDES)}>
+						ADD EXCLUDES
+					</Button>
+					</div>
+					<hr/>
+					<h6 className='text-green-400'>Title Includes</h6>
+					<div className='flex gap-2 flex-wrap'>
+					{filter[TITLE_FILTER_TYPE_INCLUDES].map((item) => {
+						return (
+							<div key={item.id} className='flex'>
+								<Input.Text 
+									name='value'
+									value={item.value}
+									onChange={(e) => onChangeFilter(item.id, TITLE_FILTER_TYPE_INCLUDES, e)}/>
+								<span onClick={()=>onRemoveFilter(item.id, TITLE_FILTER_TYPE_INCLUDES)} style={{
+									cursor: 'pointer'
+								}}>x</span>
+							</div>
+							)
+					})}
+					</div>
+					<hr/>
+					<h6 className='text-red-400'>Title Excludes</h6>
+					<div className='flex gap-2 flex-wrap'>
+					{filter[TITLE_FILTER_TYPE_EXCLUDES].map((item) => {
+						return (
+							<div key={item.id} className='flex'>
+								<Input.Text 
+									name='value'
+									value={item.value}
+									onChange={(e) => onChangeFilter(item.id, TITLE_FILTER_TYPE_EXCLUDES, e)}/>
+								<span onClick={()=>onRemoveFilter(item.id, TITLE_FILTER_TYPE_EXCLUDES)} style={{
+									cursor: 'pointer'
+								}}>x</span>
+							</div>
+							)
+					})}
+					</div>
+				</Section.Blur>
 			</div>
-			{<IssueList issues={issues} labels={labels} format={format} formats={[]}/>}
+			{<IssueList filter={filter} issues={issues} labels={labels} format={format} formats={[]}/>}
 		</div>
 		</>
 	)

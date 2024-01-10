@@ -6,12 +6,11 @@ import { GitHubLabel } from "../../../component/github-api/response-type/GithubL
 import Button from "../../../component/button/Button";
 import IssueItem from "./IssueItem";
 import { GITHUB_COLORABLE_TEXT_STYLE, GITHUB_HEX_OPACITY } from "../../../utils/GithubColor";
-import CustomIssueItem from "./custom-item/CustomIssueItem";
-import { DiscordFormatPreset } from "./preset-formats/DiscordFormat";
+import { TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES } from "../RepoIssuesPageType";
 
 const IssueList = (props : IssueListType) => {
 
-    const { issues, labels, format,  } = props;
+    const { issues, labels, format, filter } = props;
 
     const [addedLabels, setAddedLabels] = useState<GitHubLabel[]>([])
     const addedLabelsIDs = useMemo(() => addedLabels.map(item => item.id),[addedLabels])
@@ -34,14 +33,34 @@ const IssueList = (props : IssueListType) => {
     const OnClearLabels = () => setAddedLabels([])
 
     const filteredIssues = useMemo(() => {
-        if(addedLabelsIDs.length === 0) return issues;
-        return issues?.filter((item) => {
+        let filteredIssues = addedLabelsIDs.length === 0 ? issues : issues?.filter((item) => {
             const _labelsIDs = item.labels.map((item) => item.id)
             if(format.isLabelFilterSubtrative)
                 return addedLabelsIDs.every((labelID) => _labelsIDs.includes(labelID));
             return _labelsIDs.every((labelID) => addedLabelsIDs.includes(labelID));
         })
-    },[addedLabelsIDs, issues, format.isLabelFilterSubtrative])
+        if(filter.isOn){
+            filteredIssues = filteredIssues?.filter((item) =>{
+                const title = item.title.toLowerCase();
+                let isIncluded = true;
+                if(filter.isOn){
+                    if(filter[TITLE_FILTER_TYPE_INCLUDES].length !== 0){
+                        const toIncludes = filter[TITLE_FILTER_TYPE_INCLUDES].map((item) => item.value.toLowerCase());
+                        isIncluded = toIncludes.some((include) => title.includes(include));
+                    }
+                    if(filter[TITLE_FILTER_TYPE_EXCLUDES].length !== 0){
+                        const toExcludes = filter[TITLE_FILTER_TYPE_EXCLUDES].map((item) => item.value.toLowerCase());
+                        isIncluded = !toExcludes.includes(title);
+                    }
+                    
+                }
+
+                return isIncluded;
+            })
+        }
+
+        return filteredIssues
+    },[addedLabelsIDs, issues, format.isLabelFilterSubtrative, filter])
 
     return (
     <Section.Blur>
@@ -50,7 +69,8 @@ const IssueList = (props : IssueListType) => {
         <Select label={`Label Filter (${format.isLabelFilterSubtrative ? 'All Match' : 'Some Match'})`}
         onChange={OnSelectLabelToAdd} value={""}>
             <option value={""}>Select To Add</option>
-            {labels.map((item) => <option key={item.id} value={item.id} disabled={addedLabelsIDs.includes(item.id)}>
+            {labels.map((item) => <option key={item.id} value={item.id} disabled={addedLabelsIDs.includes(item.id)}
+            style={{ color: `#${item.color}` }}>
                 {item.name}
                 </option>)}
         </Select>

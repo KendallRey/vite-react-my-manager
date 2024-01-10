@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { IssueItemType } from "./IssueItemType";
 
 const IssueItem = (props: IssueItemType) => {
@@ -10,6 +10,9 @@ const IssueItem = (props: IssueItemType) => {
         if(issue.labels.length !== 1) return;
         return `#${issue.labels[0].color}`
     },[issue])
+
+    useEffect(()=>{
+    },[])
 
     return (
     <div>

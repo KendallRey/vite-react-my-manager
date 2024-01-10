@@ -9,6 +9,7 @@ export type OctokitInstanceType = {
     repo? : string;
     owner? : string;
     org?: string;
+    issue_number?: number;
     params?: OctokitInstanceTypeParams
     token?: string
 }
