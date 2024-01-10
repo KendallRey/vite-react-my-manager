@@ -185,36 +185,6 @@ const RepoIssuesPage = () => {
 					<Checkbox label='Remove Link' name='isLinkRemove' checked={format.isLinkRemove} onChange={OnChangeFormatCheck}/>
 					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtrative' checked={format.isLabelFilterSubtrative} onChange={OnChangeFormatCheck}/>
 				</Section.Blur>
-				<Section.Blur className='flex gap-4 flex-grow'>
-					<Button.Action onClick={onAddCustomFormat}>
-						Add Format
-					</Button.Action>
-					<hr/>
-					{customFormats.map((fm) => {
-						return (
-							<React.Fragment key={fm.id}>
-								<select name='type' onChange={(e)=>onChangeCustomFormat(fm.id, e)}>
-									<option value={''}>
-										...
-									</option>
-									<option value={'TEXT'}>
-										Text
-									</option>
-									<option value={'FIELD'}>
-										Field
-									</option>
-								</select>
-								<select name='value' onChange={(e)=>onChangeCustomFormat(fm.id, e)}>
-									{GITHUB_FIELDS.map((field) => 
-									<option key={field.value} value={field.value}>
-										{field.name}
-									</option>
-									)}
-								</select>
-							</React.Fragment>
-							)
-					})}
-				</Section.Blur>
 			</div>
 			{<IssueList issues={issues} labels={labels} format={format} formats={[]}/>}
 		</div>
