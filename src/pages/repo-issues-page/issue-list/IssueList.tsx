@@ -80,7 +80,7 @@ const IssueList = (props : IssueListType) => {
         <div className="text-center text-2xl">No Issue/s found.</div> :
         filteredIssues.map((issue) => {
             return (
-                <CustomIssueItem key={issue.id} issue={issue} formats={DiscordFormatPreset.formats}/>
+                <IssueItem key={issue.id} issue={issue} format={format}/>
             )
         })}
         </div>

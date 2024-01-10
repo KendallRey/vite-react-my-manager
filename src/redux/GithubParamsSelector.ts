@@ -1,10 +1,13 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { GithubParamsSliceType } from "./GithubParamsReducer";
+import { createSelector } from 'reselect';
+import { GithubParamsStateType } from './GithubParamsReducer';
 
-// Selector
-export const selectGithubParamss = (state: { params: GithubParamsSliceType }) => state.params;
+type RootState = {
+  params: GithubParamsStateType;
+};
 
-export const selectGithubTokens = createSelector(
-  [selectGithubParamss],
-  (params) => params.token
+const selectParams = (state: RootState) => state.params;
+
+export const selectToken = createSelector(
+  [selectParams],
+  (params) => params.token as string | undefined
 );

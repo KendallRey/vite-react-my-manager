@@ -16,24 +16,21 @@ import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { GITHUB_FIELDS } from './issue-list/custom-item/GithubIssueItemFields'
 import { useDispatch, useSelector } from 'react-redux'
-import { editParams, getGithubParams, githubParamsSlice } from '../../redux/GithubParamsReducer'
+import {  editParams, githubParamsSlice } from '../../redux/GithubParamsReducer'
+import { selectToken } from '../../redux/GithubParamsSelector'
+import { AppDispatch, RootState } from '../../store'
 
 const RepoIssuesPage = () => {
 
 	//#region Repository
-	const dispatch = useDispatch();
-	const githubToken = useSelector(state => state.params);
-	console.log("TTT", githubToken)
+	const dispatch = useDispatch<AppDispatch>();
+	const token = useSelector(selectToken)
 	
 	const onChangeToken = (e: RCE<HTMLInputElement>) => {
-		const { value } = e.target;
-		console.log("yrdyr", value)
-		dispatch(editParams({ token: value, bntu: value }))
+		const { name, value } = e.target;
+		dispatch(editParams({ [name]: value }))
 	}
 
-	console.log("teste", githubParamsSlice.getInitialState())
-
-	const [token, setToken] = useState<string>("")
 	const [ownerName, setOwnerName] = useState("")
 
 	const [repositories, setRepositories] = useState<GitHubRepository[]>()
