@@ -1,7 +1,7 @@
 import { RequestApi } from "../../axios/AxiosInstance";
 import { GithubAxiosInstance } from "../../axios/GithubAxiosInstance";
 import { OctokitInstance } from "../GithubBaseApi";
-import { GET_REQUEST, GithubRequestApi } from "../GithubBaseApiType";
+import { GET_REQUEST, GithubRequestApi, OCTO_KEY_OWNER, OCTO_KEY_REPO } from "../GithubBaseApiType";
 import { GitHubIssue } from "../response-type/GithubIssueType";
 
 export const GetRepositoryIssuesApi = async (props: RequestApi) => {
@@ -15,7 +15,7 @@ export const GetRepositoryIssuesApi = async (props: RequestApi) => {
 export const OctoGetRepositoryIssuesApi = async (props: GithubRequestApi) => {
     const response = await OctokitInstance({ 
         type: GET_REQUEST,
-        apiUrl: '/repos/{owner}/{repo}/issues',
+        apiUrl: `/repos/{${OCTO_KEY_OWNER}}/{${OCTO_KEY_REPO}}/issues`,
         ...props
     })
     .then((res) => res.data as GitHubIssue[])

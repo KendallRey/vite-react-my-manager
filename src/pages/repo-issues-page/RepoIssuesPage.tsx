@@ -14,49 +14,50 @@ import { IssueDiscordFilter, IssueDiscordFormatType, TITLE_FILTER_TYPE_EXCLUDES,
 import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
-import { GITHUB_FIELDS } from './issue-list/custom-item/GithubIssueItemFields'
 import { useDispatch, useSelector } from 'react-redux'
-import {  editParams, githubParamsSlice } from '../../redux/GithubParamsReducer'
-import { selectToken } from '../../redux/GithubParamsSelector'
-import { AppDispatch, RootState } from '../../store'
+import {  editParams} from '../../redux/GithubParamsReducer'
+import { selectParams, selectToken } from '../../redux/GithubParamsSelector'
+import { AppDispatch } from '../../store'
+import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '../../component/github-api/GithubBaseApiType'
 
 const RepoIssuesPage = () => {
 
 	//#region Repository
 	const dispatch = useDispatch<AppDispatch>();
 	const token = useSelector(selectToken)
+	const _params = useSelector(selectParams)
 	
-	const onChangeToken = (e: RCE<HTMLInputElement>) => {
+	const onChangeParams = (e: RCE<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		dispatch(editParams({ [name]: value }))
 	}
 
-	const [ownerName, setOwnerName] = useState("")
-
 	const [repositories, setRepositories] = useState<GitHubRepository[]>()
+	
 
 	const GetRepositories = async (e: React.FormEvent) => {
 		e.preventDefault();
-		const data = await OctoGetRepositoriesApi({
-			org: ownerName,
-			token,
-		})
+		const data = await OctoGetRepositoriesApi(_params)
 		if(data === null) return;
 		setRepositories(data)
 	}
-	
-	const [selectedRepository, setSelectedRepository] = useState<GitHubRepository>();
 
 	const OnSelectRepository = (e : RCE<HTMLSelectElement>) => {
 		const { value } = e.target;
 		if(!repositories) return;
 
-		const selected = repositories.find((repo) => repo.id.toString() === value);
+		const selected = repositories.find((repo) => repo.name === value);
 		if(!selected) return;
 
 		setLabels(undefined);
 		ClearIssues();
-		setSelectedRepository(selected);
+		const owner = selected.owner.login
+		const name = selected.name
+
+		dispatch(editParams({ 
+			[OCTO_KEY_REPO]: name,
+			[OCTO_KEY_OWNER]: owner,
+		}))
 	}
 	//#endregion
 
@@ -85,13 +86,8 @@ const RepoIssuesPage = () => {
 	const [labels, setLabels] = useState<GitHubLabel[]>()
 
 	const GetRepositoryLabels = async () => {
-		if(!selectedRepository) return;
 		setLabels([])
-		const data = await OctoGetRepositoryLabelsApi({
-			owner: selectedRepository.owner.login,
-			repo : selectedRepository.name,
-			token,
-		})
+		const data = await OctoGetRepositoryLabelsApi(_params)
 		if(data === null) return;
 		setLabels(data);
 	}
@@ -155,12 +151,9 @@ const RepoIssuesPage = () => {
 	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
 
 	const GetRepositoryIssues = async () => {
-		if(!selectedRepository) return;
 		setIssues(undefined);
 		const data = await OctoGetRepositoryIssuesApi({
-			owner: selectedRepository.owner.login,
-			repo : selectedRepository.name,
-			token,
+			..._params,
 			params: {
 				sort: 'created',
 				direction: 'asc',
@@ -206,7 +199,6 @@ const RepoIssuesPage = () => {
 	// #endregion
 	// 
 
-
 	return (
 		<>
 		<div className='flex flex-col m-2 gap-5'>
@@ -215,18 +207,18 @@ const RepoIssuesPage = () => {
 			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
 					<form id='get-repositories-form' onSubmit={GetRepositories}>
-					<Input.Text label='Token' required onChange={onChangeToken}/>
-					<Input.Text label='Organization' value={ownerName} required onChange={({target})=>{setOwnerName(target.value)}}/>
+					<Input.Text label='Token' name='token' required value={_params.token ?? ''} onChange={onChangeParams}/>
+					<Input.Text label='Organization' name='org' required onChange={onChangeParams}/>
 					<Button.Action form='get-repositories-form' type='submit'>Get Repositories</Button.Action>
 					</form>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<Select required label={`Select Repository (${repositories?.length ?? 0})`} value={selectedRepository?.id ?? ''} onChange={OnSelectRepository}>
+					<Select required label={`Select Repository (${repositories?.length ?? 0})`} value={_params.repo ?? ''} onChange={OnSelectRepository}>
 						<option value={''} disabled>...</option>
-						{repositories?.map((repo) => <option key={repo.id} value={repo.id}>{repo.name}</option>)}
+						{repositories?.map((repo) => <option key={repo.id} value={repo.name}>{repo.name}</option>)}
 					</Select>
-					<Button.Action onClick={GetRepositoryIssues} disabled={!selectedRepository}>Get Issues</Button.Action>
-					<Button.Action onClick={GetRepositoryLabels} disabled={!selectedRepository}>Get Labels</Button.Action>
+					<Button.Action onClick={GetRepositoryIssues} disabled={!_params.repo}>Get Issues</Button.Action>
+					<Button.Action onClick={GetRepositoryLabels} disabled={!_params.repo}>Get Labels</Button.Action>
 					<Button onClick={ClearIssues}>Clear</Button>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>

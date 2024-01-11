@@ -1,19 +1,14 @@
 import { createSelector } from 'reselect';
-import { GithubParamsStateType } from './GithubParamsReducer';
+import { RootState } from './RootStateType';
 
-type RootState = {
-  params: GithubParamsStateType;
-};
-
-
-const selectParams = (state: RootState) => state.params;
+const _selectParams = (state: RootState) => state.params;
 
 export const selectToken = createSelector(
-  [selectParams],
+  [_selectParams],
   (params) => params.token as string | undefined
 );
 
 export const selectParams = createSelector(
-  [selectParams],
+  [_selectParams],
   (params) => params
 );

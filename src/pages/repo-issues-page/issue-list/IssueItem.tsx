@@ -1,7 +1,14 @@
 import { useEffect, useMemo } from "react";
 import { IssueItemType } from "./IssueItemType";
+import { OctoGetIssueCommentsApi } from "../../../component/github-api/repository-issues/RepositoryIssueCommentsApi";
+import { useSelector } from "react-redux";
+import { selectParams } from "../../../redux/GithubParamsSelector";
+import { OCTO_KEY_ISSUE_NUMBER } from "../../../component/github-api/GithubBaseApiType";
 
 const IssueItem = (props: IssueItemType) => {
+
+    const params = useSelector(selectParams);
+
     const { issue, format } = props;
 
     const labelColor = useMemo(()=>{
@@ -12,7 +19,16 @@ const IssueItem = (props: IssueItemType) => {
     },[issue])
 
     useEffect(()=>{
+        GetIssueComments();
     },[])
+
+    const GetIssueComments = async () => {
+        const _comments = await OctoGetIssueCommentsApi({
+            ...params,
+            [OCTO_KEY_ISSUE_NUMBER] : issue.number
+        })
+        console.log("TES",_comments)
+    }
 
     return (
     <div>

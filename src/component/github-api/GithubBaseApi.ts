@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import { OctokitInstanceType, OctokitInstanceTypeParams } from "./GithubBaseApiType";
+import { OCTO_KEY_COLUMN_ID, OCTO_KEY_ISSUE_NUMBER, OCTO_KEY_ORG, OCTO_KEY_OWNER, OCTO_KEY_PROJECT_ID, OCTO_KEY_REPO, OctokitInstanceType, OctokitInstanceTypeParams } from "./GithubBaseApiType";
 import qs from "qs";
 
 const octokit = new Octokit({ auth: import.meta.env.VITE_GITHUB_TOKEN });
@@ -15,11 +15,14 @@ export const OctokitInstance = async (props : OctokitInstanceType) => {
     const _octokit = !token ? octokit : 
       token.trim() === '' ? octokit : 
       newOctokit(token);
-  
+
     return await _octokit.request(`${type} ${apiUrl}?${parameters}`, {
-        owner: props.owner ?? '',
-        repo: props.repo ?? '',
-        org: props.org ?? '',
+        [OCTO_KEY_OWNER]: props[OCTO_KEY_OWNER] ?? '',
+        [OCTO_KEY_REPO]: props[OCTO_KEY_REPO] ?? '',
+        [OCTO_KEY_ORG]: props[OCTO_KEY_ORG] ?? '',
+        [OCTO_KEY_ISSUE_NUMBER]: props[OCTO_KEY_ISSUE_NUMBER] ?? '',
+        [OCTO_KEY_COLUMN_ID]: props[OCTO_KEY_COLUMN_ID] ?? '',
+        [OCTO_KEY_PROJECT_ID]: props[OCTO_KEY_PROJECT_ID] ?? '',
         headers: {
           'X-GitHub-Api-Version': '2022-11-28'
         },

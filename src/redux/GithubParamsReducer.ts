@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-export type GithubParamsStateType = {[key: string] : string | boolean | number}
+export type GithubParamsStateType = {[key: string] : string | number}
 
 export const githubParamsSlice = createSlice({
   name: 'params',

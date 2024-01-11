@@ -3,13 +3,23 @@ export const GET_REQUEST = "GET"
 
 type RequestType = typeof GET_REQUEST
 
+export const OCTO_KEY_REPO = 'repo'
+export const OCTO_KEY_OWNER = 'owner'
+export const OCTO_KEY_ORG = 'org'
+export const OCTO_KEY_ISSUE_NUMBER = 'issue_number'
+export const OCTO_KEY_COLUMN_ID = 'column_id'
+export const OCTO_KEY_PROJECT_ID = 'project_id'
+
+
 export type OctokitInstanceType = {
     type: RequestType
     apiUrl: string
-    repo? : string;
-    owner? : string;
-    org?: string;
-    issue_number?: number;
+    [OCTO_KEY_REPO]? : string | number;
+    [OCTO_KEY_OWNER]? : string | number;
+    [OCTO_KEY_ORG]?: string | number;
+    [OCTO_KEY_ISSUE_NUMBER]?: string | number;
+    [OCTO_KEY_COLUMN_ID]?: string | number;
+    [OCTO_KEY_PROJECT_ID]?: string | number;
     params?: OctokitInstanceTypeParams
     token?: string
 }
