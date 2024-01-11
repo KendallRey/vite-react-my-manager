@@ -2,43 +2,100 @@ import { useEffect, useMemo, useState } from "react";
 import Section from "../../../component/section/Section"
 import Select from "../../../component/select/Select";
 import { IssueListType } from "./IssueListType"
-import { GitHubLabel } from "../../../component/github-api/response-type/GithubLabelType";
 import Button from "../../../component/button/Button";
 import IssueItem from "./IssueItem";
-import { GITHUB_COLORABLE_TEXT_STYLE, GITHUB_HEX_OPACITY } from "../../../utils/GithubColor";
 import { TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES } from "../RepoIssuesPageType";
+import Input from "../../../component/input/Input";
+import { OctoGetRepositoryIssuesApi } from "../../../component/github-api/repository-issues/RepositoryIssuesApi";
+import { GitHubIssue } from "../../../component/github-api/response-type/GithubIssueType";
+import { useSelector } from "react-redux";
+import { selectParams } from "../../../redux/GithubParamsSelector";
+import { OCTO_KEY_REPO } from "../../../component/github-api/GithubBaseApiType";
+import { GitHubRepository } from "../../../component/github-api/response-type/GithubRepositoryType";
 
 const IssueList = (props : IssueListType) => {
 
-    const { issues, labels, format, filter } = props;
+    const { format, filter, repositories } = props;
+    const _params = useSelector(selectParams);
+    console.log("teste", _params)
+    // 
+    // #region Filter Labels
 
-    const [addedLabels, setAddedLabels] = useState<GitHubLabel[]>([])
-    const addedLabelsIDs = useMemo(() => addedLabels.map(item => item.id),[addedLabels])
-
-    const OnSelectLabelToAdd = (e : RCE<HTMLSelectElement>) => {
-        if(!labels) return;
-        const { value } = e.target;
-
-        const selected = labels.find((item) => item.id.toString() === value);
-        if(!selected) return;
-        setAddedLabels(prev => prev.concat(selected));
+    type FilterLabelType = {
+        id: string;
+        value: string;
     }
 
-    useEffect(() => {
-        setAddedLabels([]);
-    }, [labels])
+    const [labels, setLabels] = useState<FilterLabelType[]>([]);
+    const labelValues = useMemo(()=> labels.map((item) => item.value) ,[labels]);
+    const OnRemoveLabel = (id: string) =>  setLabels(prev => prev.filter(label => label.id !== id));
+    const OnClearLabels = () =>  setLabels([]);
 
-    const OnRemoveLabel = (id: number) => setAddedLabels(prev => prev.filter(label => label.id !== id));
+    const [labelToAdd, setLabelToAdd] = useState("")
+    
+    const onSubmitAddLabel = (e: React.FormEvent) => {
+        e.preventDefault();
+        onAddLabel();
+    }
+    const onAddLabel = () => {
+        if(labelToAdd.trim() === '') return;
+        const formatLabelToAdd = labelToAdd.trim();
+        if(labelValues.includes(formatLabelToAdd)){
+            return;
+        }
 
-    const OnClearLabels = () => setAddedLabels([])
+        const date = new Date();
+        const newLabelToAdd = {
+            id: "label"+date.toISOString()+date.getMilliseconds(),
+            value: formatLabelToAdd,
+        }
+        setLabels((prev) => prev.concat(newLabelToAdd))
+        setLabelToAdd("")
+    }
+
+    // #endregion
+    // 
+
+    // #region Repository
+
+    const [selectedRepository, setSelectedRepository] = useState<GitHubRepository>()
+
+    const OnSelectRepository = (e : RCE<HTMLSelectElement>) => {
+        const { value } = e.target
+        const selectedRepository = repositories?.find((repo) => repo.id.toString() === value);
+        if(!selectedRepository) return;
+
+        setSelectedRepository(selectedRepository);
+    }
+
+    // #endregion
+
+    //#region Issues
+
+	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
+
+	const GetRepositoryIssues = async () => {
+		setIssues(undefined);
+        if(!selectedRepository) return;
+		const data = await OctoGetRepositoryIssuesApi({
+			..._params,
+            [OCTO_KEY_REPO]:  selectedRepository.name,
+			params: {
+				sort: 'created',
+				direction: 'asc',
+                labels: labelValues.join(',')
+			}
+		})
+		if(data === null) return;
+		setIssues(data);
+	}
+	
+	const ClearIssues = () => setIssues([]);
+
+	//#endregion
 
     const filteredIssues = useMemo(() => {
-        let filteredIssues = addedLabelsIDs.length === 0 ? issues : issues?.filter((item) => {
-            const _labelsIDs = item.labels.map((item) => item.id)
-            if(format.isLabelFilterSubtrative)
-                return addedLabelsIDs.every((labelID) => _labelsIDs.includes(labelID));
-            return _labelsIDs.every((labelID) => addedLabelsIDs.includes(labelID));
-        })
+        let filteredIssues = issues;
         if(filter.isOn){
             filteredIssues = filteredIssues?.filter((item) =>{
                 const title = item.title.toLowerCase();
@@ -60,36 +117,52 @@ const IssueList = (props : IssueListType) => {
         }
 
         return filteredIssues
-    },[addedLabelsIDs, issues, format.isLabelFilterSubtrative, filter])
+    },[issues, format.isLabelFilterSubtrative, filter])
 
     return (
     <Section.Blur>
-        {labels &&
-        <>
-        <Select label={`Label Filter (${format.isLabelFilterSubtrative ? 'All Match' : 'Some Match'})`}
-        onChange={OnSelectLabelToAdd} value={""}>
-            <option value={""}>Select To Add</option>
-            {labels.map((item) => <option key={item.id} value={item.id} disabled={addedLabelsIDs.includes(item.id)}
-            style={{ color: `#${item.color}` }}>
-                {item.name}
-                </option>)}
+        <div className="flex flex-wrap justify-between">
+        <Select label="Repository:" value={selectedRepository?.id ?? ''} onChange={OnSelectRepository} required>
+                {repositories?.map((item) => {
+                    return (
+                        <option key={item.id} value={item.id}>{item.name}</option>
+                        )
+                })}
         </Select>
-        <Button.Action className="p-1 my-1 rounded text-xs" onClick={OnClearLabels}>
-            Clear Filter/s
+        <div className="flex flex-wrap gap-4">
+            <Button.Action className="p-1 my-1" onClick={GetRepositoryIssues} disabled={!selectedRepository}>
+                Fetch Issue/s
+            </Button.Action>
+            <Button.Action className="p-1 my-1" onClick={ClearIssues}>
+                Clear
+            </Button.Action>
+            </div>
+            </div>
+            <hr/>
+        <div className="flex flex-wrap justify-between">
+            <div className="flex flex-wrap gap-4">
+            <form onSubmit={onSubmitAddLabel}>
+            <Input.Text label={`Enter Label Filter (${labels.length}):`} maxLength={24} value={labelToAdd} onChange={({target}) => setLabelToAdd(target.value)}/>
+            </form>
+            </div>
+            
+        </div>
+        <Button.Action className="p-1 m-1 rounded text-xs" onClick={onAddLabel}>
+            Add Label
+        </Button.Action>
+        <Button.Action className="p-1 m-1 rounded text-xs" onClick={OnClearLabels}>
+            Clear Label/s
         </Button.Action>
         <div className="flex flex-wrap gap-2">
-            {addedLabels.map((item) => {
-            const color = `#${item.color}`
+            {labels.map((item) => {
                 return (
-                    <div key={item.id} className="p-1 rounded" style={{ background: `${color}${GITHUB_HEX_OPACITY}` }}>
-                        <span style={{color:color, filter: GITHUB_COLORABLE_TEXT_STYLE}}>{item.name}</span>
+                    <div key={item.id} className="p-1 rounded border border-gray-500 rounded-xl px-2">
+                        <span>{item.value}</span>
                         <button className="mx-2" onClick={()=>OnRemoveLabel(item.id)}>X</button>
                     </div>
                     )
             })}
         </div>
-        </>
-        }
         <hr className="my-2"/>
         <div className="my-2">
         <span>Issue/s ({filteredIssues?.length})</span>

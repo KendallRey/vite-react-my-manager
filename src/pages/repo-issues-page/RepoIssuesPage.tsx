@@ -24,7 +24,6 @@ const RepoIssuesPage = () => {
 
 	//#region Repository
 	const dispatch = useDispatch<AppDispatch>();
-	const token = useSelector(selectToken)
 	const _params = useSelector(selectParams)
 	
 	const onChangeParams = (e: RCE<HTMLInputElement>) => {
@@ -49,7 +48,6 @@ const RepoIssuesPage = () => {
 		const selected = repositories.find((repo) => repo.name === value);
 		if(!selected) return;
 
-		setLabels(undefined);
 		ClearIssues();
 		const owner = selected.owner.login
 		const name = selected.name
@@ -68,6 +66,7 @@ const RepoIssuesPage = () => {
 		suffix: '',
 		isLinkRemove: false,
 		isLabelFilterSubtrative: false,
+		hideTitleFilter: true,
 	})
 
 	const OnChangeFormat = (e : RCE<HTMLInputElement>) => {
@@ -79,19 +78,6 @@ const RepoIssuesPage = () => {
 		const { name, checked } = e.target;
 		setFormat(prev => ({...prev, [name] : checked }))
 	}
-	//#endregion
-
-	//#region Labels
-
-	const [labels, setLabels] = useState<GitHubLabel[]>()
-
-	const GetRepositoryLabels = async () => {
-		setLabels([])
-		const data = await OctoGetRepositoryLabelsApi(_params)
-		if(data === null) return;
-		setLabels(data);
-	}
-
 	//#endregion
 
 	// 
@@ -157,6 +143,7 @@ const RepoIssuesPage = () => {
 			params: {
 				sort: 'created',
 				direction: 'asc',
+				labels: 'wontfix,enhancement',
 			}
 		})
 		if(data === null) return;
@@ -218,7 +205,6 @@ const RepoIssuesPage = () => {
 						{repositories?.map((repo) => <option key={repo.id} value={repo.name}>{repo.name}</option>)}
 					</Select>
 					<Button.Action onClick={GetRepositoryIssues} disabled={!_params.repo}>Get Issues</Button.Action>
-					<Button.Action onClick={GetRepositoryLabels} disabled={!_params.repo}>Get Labels</Button.Action>
 					<Button onClick={ClearIssues}>Clear</Button>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
@@ -228,7 +214,9 @@ const RepoIssuesPage = () => {
 				<Section.Blur className='flex gap-4 flex-grow'>
 					<Checkbox label='Remove Link' name='isLinkRemove' checked={format.isLinkRemove} onChange={OnChangeFormatCheck}/>
 					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtrative' checked={format.isLabelFilterSubtrative} onChange={OnChangeFormatCheck}/>
+					<Checkbox label='Hide Title Filter' name='hideTitleFilter' checked={format.hideTitleFilter} onChange={OnChangeFormatCheck}/>
 				</Section.Blur>
+				{!format.hideTitleFilter &&
 				<Section.Blur className='gap-4 flex-grow'>
 					<Checkbox label='Toggle Filter' name='isOn' checked={filter.isOn} onChange={onToggleFilter}/>
 					<div className='flex gap-4 mb-2 flex-wrap'>
@@ -276,8 +264,9 @@ const RepoIssuesPage = () => {
 					})}
 					</div>
 				</Section.Blur>
+				}
 			</div>
-			{<IssueList filter={filter} issues={issues} labels={labels} format={format} formats={[]}/>}
+			{<IssueList filter={filter} format={format} formats={[]} repositories={repositories}/>}
 		</div>
 		</>
 	)

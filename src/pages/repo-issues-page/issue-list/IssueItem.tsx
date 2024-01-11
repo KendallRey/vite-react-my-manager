@@ -3,7 +3,7 @@ import { IssueItemType } from "./IssueItemType";
 import { OctoGetIssueCommentsApi } from "../../../component/github-api/repository-issues/RepositoryIssueCommentsApi";
 import { useSelector } from "react-redux";
 import { selectParams } from "../../../redux/GithubParamsSelector";
-import { OCTO_KEY_ISSUE_NUMBER } from "../../../component/github-api/GithubBaseApiType";
+import { OCTO_KEY_ISSUE_NUMBER, OCTO_PARAMS_KEY_PAGE, OCTO_PARAMS_KEY_PER_PAGE } from "../../../component/github-api/GithubBaseApiType";
 
 const IssueItem = (props: IssueItemType) => {
 
@@ -25,7 +25,7 @@ const IssueItem = (props: IssueItemType) => {
     const GetIssueComments = async () => {
         const _comments = await OctoGetIssueCommentsApi({
             ...params,
-            [OCTO_KEY_ISSUE_NUMBER] : issue.number
+            [OCTO_KEY_ISSUE_NUMBER] : issue.number,
         })
         console.log("TES",_comments)
     }

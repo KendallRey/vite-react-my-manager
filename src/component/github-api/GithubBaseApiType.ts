@@ -9,6 +9,8 @@ export const OCTO_KEY_ORG = 'org'
 export const OCTO_KEY_ISSUE_NUMBER = 'issue_number'
 export const OCTO_KEY_COLUMN_ID = 'column_id'
 export const OCTO_KEY_PROJECT_ID = 'project_id'
+export const OCTO_PARAMS_KEY_PER_PAGE = 'per_page'
+export const OCTO_PARAMS_KEY_PAGE = 'page'
 
 
 export type OctokitInstanceType = {

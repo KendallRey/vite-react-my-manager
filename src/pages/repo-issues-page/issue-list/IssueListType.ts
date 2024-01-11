@@ -1,12 +1,10 @@
-import { GitHubIssue } from "../../../component/github-api/response-type/GithubIssueType"
-import { GitHubLabel } from "../../../component/github-api/response-type/GithubLabelType";
+import { GitHubRepository } from "../../../component/github-api/response-type/GithubRepositoryType";
 import { IssueDiscordFilter, IssueDiscordFormatType } from "../RepoIssuesPageType";
 import { FormatItem } from "./custom-item/CustomIssueItemType";
 
 export type IssueListType = {
-    issues?: GitHubIssue[];
-    labels? : GitHubLabel[];
     format: IssueDiscordFormatType;
     formats: FormatItem[];
     filter: IssueDiscordFilter 
+    repositories?: GitHubRepository[] | null
 }
