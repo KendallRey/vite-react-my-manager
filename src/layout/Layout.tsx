@@ -18,6 +18,8 @@ const Layout = () => {
 
 	const fcm = useFCM();
 
+	console.log("FCM", fcm)
+
 	if(user === undefined)
 		return (
 			<ErrorPage message='...'/>
