@@ -16,7 +16,7 @@ const Layout = () => {
 
 	console.log("L", user)
 
-	const fcm = useFCM();
+	const fcm = useFCM('/firebase-messaging-sw.js');
 
 	console.log("FCM", fcm)
 
