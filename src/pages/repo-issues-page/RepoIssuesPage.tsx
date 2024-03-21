@@ -1,13 +1,9 @@
 import { useState } from 'react'
 import { OctoGetRepositoryIssuesApi } from '../../component/github-api/repository-issues/RepositoryIssuesApi'
 import { GitHubIssue } from '../../component/github-api/response-type/GithubIssueType'
-import Button from '../../component/button/Button'
-import Input from '../../component/input/Input'
 import Section from '../../component/section/Section'
-import Checkbox from '../../component/checkbox/Checkbox'
 import { OctoGetRepositoriesApi } from '../../component/github-api/repository/RepositoriesApi'
 import { GitHubRepository } from '../../component/github-api/response-type/GithubRepositoryType'
-import Select from '../../component/select/Select'
 import { IssueDiscordFilter, IssueDiscordFormatType, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
@@ -19,9 +15,11 @@ import { AppDispatch } from '../../store'
 import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '../../component/github-api/GithubBaseApiType'
 import { selectConfig } from '../../redux/IssueConfigSelector'
 import { editConfig } from '../../redux/IssueConfigReducer'
-
+import { Button, Checkbox,  FormControl, FormLabel, Input, Select, useColorMode } from '@chakra-ui/react'
 
 const RepoIssuesPage = () => {
+
+	const { toggleColorMode } = useColorMode();
 
 	//#region Repository
 	const dispatch = useDispatch<AppDispatch>();
@@ -187,50 +185,74 @@ const RepoIssuesPage = () => {
 
 	return (
 		<>
-		<div className='flex flex-col m-2 gap-5'>
-	
-
+		<div className='flex min-h-screen flex-col mx-2 gap-5'>
+			<Button onClick={toggleColorMode}>Mode</Button>
 			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
-					<form id='get-repositories-form' onSubmit={GetRepositories}>
-					<Input.Text label='Token' name='token' required value={_params.token ?? ''} onChange={onChangeParams}/>
-					<Input.Text label='Organization' name='org' required onChange={onChangeParams}/>
-					<Button.Action form='get-repositories-form' type='submit'>Get Repositories</Button.Action>
+					<form id='get-repositories-form'  className='flex flex-col gap-4 flex-grow' onSubmit={GetRepositories}>
+					<FormControl>
+						<FormLabel>Token</FormLabel>
+						<Input name='token' required value={_params.token ?? ''} onChange={onChangeParams}/>
+					</FormControl>
+					<FormControl>
+						<FormLabel>Organization</FormLabel>
+						<Input name='org' required onChange={onChangeParams}/>
+					</FormControl>
+					<Button variant='outline' form='get-repositories-form' type='submit'>
+						Get Repositories
+					</Button>
 					</form>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<Select required label={`Select Repository (${repositories?.length ?? 0})`} value={_params.repo ?? ''} onChange={OnSelectRepository}>
+					<FormLabel>{`Select Repository (${repositories?.length ?? 0})`}</FormLabel>
+					<Select required value={_params.repo ?? ''} onChange={OnSelectRepository}>
 						<option value={''} disabled>...</option>
 						{repositories?.map((repo) => <option key={repo.id} value={repo.name}>{repo.name}</option>)}
 					</Select>
-					<Button.Action onClick={GetRepositoryIssues} disabled={!_params.repo}>Get Issues</Button.Action>
+					<Button onClick={GetRepositoryIssues} disabled={!_params.repo}>Get Issues</Button>
 					<Button onClick={ClearIssues}>Clear</Button>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<Input.Text label='Before Card Number' name='prefix' value={format.prefix} onChange={OnChangeFormat}/>
-					<Input.Text label='After Card Number' name='suffix' value={format.suffix} onChange={OnChangeFormat}/>
+					<FormControl>
+						<FormLabel>Before Card Number</FormLabel>
+						<Input name='prefix' value={format.prefix} onChange={OnChangeFormat}/>
+					</FormControl>
+					<FormControl>
+						<FormLabel>After Card Numbe</FormLabel>
+						<Input name='suffix' value={format.suffix} onChange={OnChangeFormat}/>
+					</FormControl>
 				</Section.Blur>
-				<Section.Blur className='flex gap-4 flex-grow'>
-					<Checkbox label='Remove Link'
+				<Section.Blur className='flex gap-4 flex-grow min-w-screen'>
+					<Checkbox
 						name='removeLink'
 						checked={_config.removeLink}
-						onChange={onChangeConfig}/>
-					<Checkbox label='Subtractive Label Filter'
+						onChange={onChangeConfig}>
+						Remove Link
+					</Checkbox>
+					<Checkbox
 						name='isLabelFilterSubtractive'
 						checked={_config.isLabelFilterSubtractive}
-						onChange={onChangeConfig}/>
-					<Checkbox label='Hide Title Filter'
+						onChange={onChangeConfig}>
+						Subtractive Label Filter
+					</Checkbox>
+					<Checkbox
 						name='hideTitleFilter'
 						checked={_config.hideTitleFilter}
-						onChange={onChangeConfig}/>
-					<Checkbox label='Hide Labels'
+						onChange={onChangeConfig}>
+						Hide Title Filter
+					</Checkbox>
+					<Checkbox
 						name='hideLabels'
 						checked={_config.hideLabels}
-						onChange={onChangeConfig}/>
+						onChange={onChangeConfig}>
+						Hide Labels
+					</Checkbox>
 				</Section.Blur>
 				{!_config.hideTitleFilter &&
 				<Section.Blur className='gap-4 flex-grow'>
-					<Checkbox label='Toggle Filter' name='isOn' checked={filter.isOn} onChange={onToggleFilter}/>
+					<Checkbox name='isOn' checked={filter.isOn} onChange={onToggleFilter}>
+						Toggle Filter
+					</Checkbox>
 					<div className='flex gap-4 mb-2 flex-wrap'>
 					<Button className='flex-grow'
 						onClick={()=>onAddFilter(TITLE_FILTER_TYPE_INCLUDES)}>
@@ -247,7 +269,7 @@ const RepoIssuesPage = () => {
 					{filter[TITLE_FILTER_TYPE_INCLUDES].map((item) => {
 						return (
 							<div key={item.id} className='flex'>
-								<Input.Text 
+								<Input
 									name='value'
 									value={item.value}
 									onChange={(e) => onChangeFilter(item.id, TITLE_FILTER_TYPE_INCLUDES, e)}/>
@@ -264,7 +286,7 @@ const RepoIssuesPage = () => {
 					{filter[TITLE_FILTER_TYPE_EXCLUDES].map((item) => {
 						return (
 							<div key={item.id} className='flex'>
-								<Input.Text 
+								<Input
 									name='value'
 									value={item.value}
 									onChange={(e) => onChangeFilter(item.id, TITLE_FILTER_TYPE_EXCLUDES, e)}/>

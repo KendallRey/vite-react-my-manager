@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Section from "../../../component/section/Section"
-import Select from "../../../component/select/Select";
 import { IssueListType } from "./IssueListType"
-import Button from "../../../component/button/Button";
 import IssueItem from "./issue/IssueItem";
 import { TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES } from "../RepoIssuesPageType";
-import Input from "../../../component/input/Input";
 import { OctoGetRepositoryIssuesApi } from "../../../component/github-api/repository-issues/RepositoryIssuesApi";
 import { GitHubIssue } from "../../../component/github-api/response-type/GithubIssueType";
 import { useSelector } from "react-redux";
@@ -13,6 +10,7 @@ import { selectParams } from "../../../redux/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "../../../component/github-api/GithubBaseApiType";
 import { GitHubRepository } from "../../../component/github-api/response-type/GithubRepositoryType";
 import { selectConfig } from "../../../redux/IssueConfigSelector";
+import { Button, FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 
 const IssueList = (props : IssueListType) => {
 
@@ -123,37 +121,43 @@ const IssueList = (props : IssueListType) => {
     return (
     <Section.Blur>
         <div className="flex flex-wrap justify-between">
-        <Select label="Repository:" value={selectedRepository?.id ?? ''} onChange={OnSelectRepository} required>
-                {repositories?.map((item) => {
-                    return (
-                        <option key={item.id} value={item.id}>{item.name}</option>
-                        )
-                })}
-        </Select>
+        <FormControl>
+          <FormLabel>Repository:</FormLabel>
+          <Select value={selectedRepository?.id ?? ''} onChange={OnSelectRepository} required>
+            {repositories?.map((item) => {
+              return (
+                <option key={item.id} value={item.id}>{item.name}</option>
+              )
+            })}
+          </Select>
+        </FormControl>
         <div className="flex flex-wrap gap-4">
-            <Button.Action className="p-1 my-1" onClick={GetRepositoryIssues} disabled={!selectedRepository}>
+            <Button className="p-1 my-1" onClick={GetRepositoryIssues} disabled={!selectedRepository}>
                 Fetch Issue/s
-            </Button.Action>
-            <Button.Action className="p-1 my-1" onClick={ClearIssues}>
+            </Button>
+            <Button className="p-1 my-1" onClick={ClearIssues}>
                 Clear
-            </Button.Action>
+            </Button>
             </div>
             </div>
             <hr/>
         <div className="flex flex-wrap justify-between">
             <div className="flex flex-wrap gap-4">
             <form onSubmit={onSubmitAddLabel}>
-            <Input.Text label={`Enter Label Filter (${labels.length}):`} maxLength={24} value={labelToAdd} onChange={({target}) => setLabelToAdd(target.value)}/>
+              <FormControl>
+                <FormLabel>{`Enter Label Filter (${labels.length}):`}</FormLabel>
+                <Input maxLength={24} value={labelToAdd} onChange={({target}) => setLabelToAdd(target.value)}/>
+              </FormControl>
             </form>
             </div>
             
         </div>
-        <Button.Action className="p-1 m-1 rounded text-xs" onClick={onAddLabel}>
+        <Button className="p-1 m-1 rounded text-xs" onClick={onAddLabel}>
             Add Label
-        </Button.Action>
-        <Button.Action className="p-1 m-1 rounded text-xs" onClick={OnClearLabels}>
+        </Button>
+        <Button className="p-1 m-1 rounded text-xs" onClick={OnClearLabels}>
             Clear Label/s
-        </Button.Action>
+        </Button>
         <div className="flex flex-wrap gap-2">
             {labels.map((item) => {
                 return (

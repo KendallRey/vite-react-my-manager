@@ -19,6 +19,7 @@ export const OctokitInstance = async (props : OctokitInstanceType) => {
     return await _octokit.request(`${type} ${apiUrl}?${parameters}`, {
         [OCTO_KEY_OWNER]: props[OCTO_KEY_OWNER] ?? '',
         [OCTO_KEY_REPO]: props[OCTO_KEY_REPO] ?? '',
+        type: 'private',
         [OCTO_KEY_ORG]: props[OCTO_KEY_ORG] ?? '',
         [OCTO_KEY_ISSUE_NUMBER]: props[OCTO_KEY_ISSUE_NUMBER] ?? '',
         [OCTO_KEY_COLUMN_ID]: props[OCTO_KEY_COLUMN_ID] ?? '',
