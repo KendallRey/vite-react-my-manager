@@ -12,12 +12,13 @@ import { useSelector } from "react-redux";
 import { selectParams } from "../../../redux/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "../../../component/github-api/GithubBaseApiType";
 import { GitHubRepository } from "../../../component/github-api/response-type/GithubRepositoryType";
+import { selectConfig } from "../../../redux/IssueConfigSelector";
 
 const IssueList = (props : IssueListType) => {
 
     const { format, filter, repositories } = props;
     const _params = useSelector(selectParams);
-    console.log("teste", _params)
+    const config = useSelector(selectConfig);
     // 
     // #region Filter Labels
 
@@ -117,7 +118,7 @@ const IssueList = (props : IssueListType) => {
         }
 
         return filteredIssues
-    },[issues, format.isLabelFilterSubtrative, filter])
+    },[issues, config.isLabelFilterSubtractive, filter])
 
     return (
     <Section.Blur>

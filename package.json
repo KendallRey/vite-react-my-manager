@@ -9,6 +9,7 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
+    "start": "vite",
     "axios": "^1.4.0",
     "uuidv4": "^6.2.13",
     "yup": "^1.1.1",

@@ -1,13 +1,11 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { IssueItemType } from "./IssueItemType";
-import { OctoGetIssueCommentsApi } from "../../../component/github-api/repository-issues/RepositoryIssueCommentsApi";
 import { useSelector } from "react-redux";
-import { selectParams } from "../../../redux/GithubParamsSelector";
-import { OCTO_KEY_ISSUE_NUMBER, OCTO_PARAMS_KEY_PAGE, OCTO_PARAMS_KEY_PER_PAGE } from "../../../component/github-api/GithubBaseApiType";
+import { selectConfig } from "../../../redux/IssueConfigSelector";
 
 const IssueItem = (props: IssueItemType) => {
 
-    const params = useSelector(selectParams);
+    const config = useSelector(selectConfig);
 
     const { issue, format } = props;
 
@@ -18,21 +16,9 @@ const IssueItem = (props: IssueItemType) => {
         return `#${issue.labels[0].color}`
     },[issue])
 
-    useEffect(()=>{
-        GetIssueComments();
-    },[])
-
-    const GetIssueComments = async () => {
-        const _comments = await OctoGetIssueCommentsApi({
-            ...params,
-            [OCTO_KEY_ISSUE_NUMBER] : issue.number,
-        })
-        console.log("TES",_comments)
-    }
-
     return (
     <div>
-        {format?.isLinkRemove ?
+        {config.removeLink ?
         <>
         - {format?.prefix}{issue.number}{format?.suffix} {issue.title}
         </>

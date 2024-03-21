@@ -1,9 +1,6 @@
 export type IssueDiscordFormatType = {
     prefix: '';
     suffix: '';
-    isLinkRemove: boolean;
-    isLabelFilterSubtrative: boolean;
-    hideTitleFilter: boolean;
 }
 
 export const TITLE_FILTER_TYPE_INCLUDES = 'titleIncludes'

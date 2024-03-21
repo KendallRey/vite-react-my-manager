@@ -15,20 +15,29 @@ import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {  editParams} from '../../redux/GithubParamsReducer'
+import {  editParams, githubParamsSlice} from '../../redux/GithubParamsReducer'
 import { selectParams, selectToken } from '../../redux/GithubParamsSelector'
 import { AppDispatch } from '../../store'
 import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '../../component/github-api/GithubBaseApiType'
+import { selectConfig } from '../../redux/IssueConfigSelector'
+import { editConfig } from '../../redux/IssueConfigReducer'
+
 
 const RepoIssuesPage = () => {
 
 	//#region Repository
 	const dispatch = useDispatch<AppDispatch>();
-	const _params = useSelector(selectParams)
+	const _params = useSelector(selectParams);
+  const _config = useSelector(selectConfig);
 	
 	const onChangeParams = (e: RCE<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		dispatch(editParams({ [name]: value }))
+	}
+
+	const onChangeConfig = (e: RCE<HTMLInputElement>) => {
+		const { name, checked } = e.target;
+		dispatch(editConfig({ [name]: checked }))
 	}
 
 	const [repositories, setRepositories] = useState<GitHubRepository[]>()
@@ -64,9 +73,6 @@ const RepoIssuesPage = () => {
 	const [format, setFormat] = useState<IssueDiscordFormatType>({
 		prefix: '',
 		suffix: '',
-		isLinkRemove: false,
-		isLabelFilterSubtrative: false,
-		hideTitleFilter: true,
 	})
 
 	const OnChangeFormat = (e : RCE<HTMLInputElement>) => {
@@ -212,11 +218,11 @@ const RepoIssuesPage = () => {
 					<Input.Text label='After Card Number' name='suffix' value={format.suffix} onChange={OnChangeFormat}/>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow'>
-					<Checkbox label='Remove Link' name='isLinkRemove' checked={format.isLinkRemove} onChange={OnChangeFormatCheck}/>
-					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtrative' checked={format.isLabelFilterSubtrative} onChange={OnChangeFormatCheck}/>
-					<Checkbox label='Hide Title Filter' name='hideTitleFilter' checked={format.hideTitleFilter} onChange={OnChangeFormatCheck}/>
+					<Checkbox label='Remove Link' name='removeLink' checked={_config.removeLink} onChange={onChangeConfig}/>
+					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtractive' checked={_config.isLabelFilterSubtractive} onChange={onChangeConfig}/>
+					<Checkbox label='Hide Title Filter' name='hideTitleFilter' checked={_config.hideTitleFilter} onChange={onChangeConfig}/>
 				</Section.Blur>
-				{!format.hideTitleFilter &&
+				{!_config.hideTitleFilter &&
 				<Section.Blur className='gap-4 flex-grow'>
 					<Checkbox label='Toggle Filter' name='isOn' checked={filter.isOn} onChange={onToggleFilter}/>
 					<div className='flex gap-4 mb-2 flex-wrap'>
