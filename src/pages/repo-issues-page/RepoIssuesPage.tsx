@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { OctoGetRepositoryIssuesApi } from '../../component/github-api/repository-issues/RepositoryIssuesApi'
 import { GitHubIssue } from '../../component/github-api/response-type/GithubIssueType'
 import Button from '../../component/button/Button'
@@ -8,15 +8,13 @@ import Checkbox from '../../component/checkbox/Checkbox'
 import { OctoGetRepositoriesApi } from '../../component/github-api/repository/RepositoriesApi'
 import { GitHubRepository } from '../../component/github-api/response-type/GithubRepositoryType'
 import Select from '../../component/select/Select'
-import { OctoGetRepositoryLabelsApi } from '../../component/github-api/repository-labels/RepositoryLabelsApi'
-import { GitHubLabel } from '../../component/github-api/response-type/GithubLabelType'
 import { IssueDiscordFilter, IssueDiscordFormatType, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {  editParams, githubParamsSlice} from '../../redux/GithubParamsReducer'
-import { selectParams, selectToken } from '../../redux/GithubParamsSelector'
+import {  editParams } from '../../redux/GithubParamsReducer'
+import { selectParams } from '../../redux/GithubParamsSelector'
 import { AppDispatch } from '../../store'
 import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '../../component/github-api/GithubBaseApiType'
 import { selectConfig } from '../../redux/IssueConfigSelector'
@@ -28,8 +26,8 @@ const RepoIssuesPage = () => {
 	//#region Repository
 	const dispatch = useDispatch<AppDispatch>();
 	const _params = useSelector(selectParams);
-  const _config = useSelector(selectConfig);
-	
+	const _config = useSelector(selectConfig);
+
 	const onChangeParams = (e: RCE<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		dispatch(editParams({ [name]: value }))
@@ -41,7 +39,6 @@ const RepoIssuesPage = () => {
 	}
 
 	const [repositories, setRepositories] = useState<GitHubRepository[]>()
-	
 
 	const GetRepositories = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -80,10 +77,6 @@ const RepoIssuesPage = () => {
 		setFormat(prev => ({...prev, [name] : value }))
 	}
 
-	const OnChangeFormatCheck = (e : RCE<HTMLInputElement>) => {
-		const { name, checked } = e.target;
-		setFormat(prev => ({...prev, [name] : checked }))
-	}
 	//#endregion
 
 	// 
@@ -218,9 +211,22 @@ const RepoIssuesPage = () => {
 					<Input.Text label='After Card Number' name='suffix' value={format.suffix} onChange={OnChangeFormat}/>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow'>
-					<Checkbox label='Remove Link' name='removeLink' checked={_config.removeLink} onChange={onChangeConfig}/>
-					<Checkbox label='Subtractive Label Filter' name='isLabelFilterSubtractive' checked={_config.isLabelFilterSubtractive} onChange={onChangeConfig}/>
-					<Checkbox label='Hide Title Filter' name='hideTitleFilter' checked={_config.hideTitleFilter} onChange={onChangeConfig}/>
+					<Checkbox label='Remove Link'
+						name='removeLink'
+						checked={_config.removeLink}
+						onChange={onChangeConfig}/>
+					<Checkbox label='Subtractive Label Filter'
+						name='isLabelFilterSubtractive'
+						checked={_config.isLabelFilterSubtractive}
+						onChange={onChangeConfig}/>
+					<Checkbox label='Hide Title Filter'
+						name='hideTitleFilter'
+						checked={_config.hideTitleFilter}
+						onChange={onChangeConfig}/>
+					<Checkbox label='Hide Labels'
+						name='hideLabels'
+						checked={_config.hideLabels}
+						onChange={onChangeConfig}/>
 				</Section.Blur>
 				{!_config.hideTitleFilter &&
 				<Section.Blur className='gap-4 flex-grow'>

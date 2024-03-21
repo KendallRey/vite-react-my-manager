@@ -29,15 +29,7 @@ export type GitHubIssue = {
       type: string;
       site_admin: boolean;
     };
-    labels: {
-      id: number;
-      node_id: string;
-      url: string;
-      name: string;
-      color: string;
-      default: boolean;
-      description: string | null;
-    }[];
+    labels: GithubIssueLabel[];
     state: string;
     locked: boolean;
     assignee: {
@@ -104,3 +96,13 @@ export type GitHubIssue = {
     performed_via_github_app: null;
     state_reason: null;
   };
+
+export type GithubIssueLabel = {
+  id: number;
+  node_id: string;
+  url: string;
+  name: string;
+  color: string;
+  default: boolean;
+  description: string | null;
+}

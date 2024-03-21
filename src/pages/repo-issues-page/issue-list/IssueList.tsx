@@ -3,7 +3,7 @@ import Section from "../../../component/section/Section"
 import Select from "../../../component/select/Select";
 import { IssueListType } from "./IssueListType"
 import Button from "../../../component/button/Button";
-import IssueItem from "./IssueItem";
+import IssueItem from "./issue/IssueItem";
 import { TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES } from "../RepoIssuesPageType";
 import Input from "../../../component/input/Input";
 import { OctoGetRepositoryIssuesApi } from "../../../component/github-api/repository-issues/RepositoryIssuesApi";
