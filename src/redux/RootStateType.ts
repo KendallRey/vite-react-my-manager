@@ -1,3 +1,4 @@
+import { GithubFilterStateType } from "./GithubFilterReducer";
 import { GithubParamsStateType } from "./GithubParamsReducer";
 import { GithubStateType } from "./GithubReducer";
 import { IssueConfigStateType } from "./IssueConfigReducer";
@@ -8,4 +9,5 @@ export type RootState = {
     config: IssueConfigStateType;
     format: IssueFormatStateType;
     github: GithubStateType;
+    filter: GithubFilterStateType;
 };

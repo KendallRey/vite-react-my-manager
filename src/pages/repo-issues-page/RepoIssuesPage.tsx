@@ -17,6 +17,7 @@ import ConfigSection from './config-section/config-section'
 import FormatSection from './format-section/format-section'
 import RepositorySection from './repository-section/repository-section'
 import { editGithub } from '@/redux/GithubReducer'
+import TitleFilterSection from './title-filter-section/title-filter-section'
 
 const RepoIssuesPage = () => {
 
@@ -122,6 +123,7 @@ const RepoIssuesPage = () => {
 
 			<Button onClick={toggleColorMode}>Mode</Button>
 			<div className='flex flex-wrap gap-5'>
+
 				<Section.Blur className='flex gap-4 flex-grow'>
 					<form
 						className='flex flex-col gap-4 flex-grow'
@@ -134,9 +136,17 @@ const RepoIssuesPage = () => {
 						<FormLabel>Organization</FormLabel>
 						<Input name='org' required onChange={onChangeParams}/>
 					</FormControl>
-					<Button variant='outline' type='submit'>
+					<Button type='submit'>
 						Get Repositories
 					</Button>
+					<div className='flex flex-wrap gap-2 justify-between'>
+						<Button className='flex-grow'>
+							Save Token
+						</Button>
+						<Button className='flex-grow'>
+							Clear Token
+						</Button>
+					</div>
 					</form>
 				</Section.Blur>
 
@@ -147,56 +157,9 @@ const RepoIssuesPage = () => {
 				<ConfigSection/>
 
 				{!_config.hideTitleFilter &&
-				<Section.Blur className='gap-4 flex-grow'>
-					<Checkbox name='isOn' checked={filter.isOn} onChange={onToggleFilter}>
-						Toggle Filter
-					</Checkbox>
-					<div className='flex gap-4 mb-2 flex-wrap'>
-					<Button className='flex-grow'
-						onClick={()=>onAddFilter(TITLE_FILTER_TYPE_INCLUDES)}>
-						ADD INCLUDES
-					</Button>
-					<Button className='flex-grow'
-						onClick={()=>onAddFilter(TITLE_FILTER_TYPE_EXCLUDES)}>
-						ADD EXCLUDES
-					</Button>
-					</div>
-					<hr/>
-					<h6 className='text-green-400'>Title Includes</h6>
-					<div className='flex gap-2 flex-wrap'>
-					{filter[TITLE_FILTER_TYPE_INCLUDES].map((item) => {
-						return (
-							<div key={item.id} className='flex'>
-								<Input
-									name='value'
-									value={item.value}
-									onChange={(e) => onChangeFilter(item.id, TITLE_FILTER_TYPE_INCLUDES, e)}/>
-								<span onClick={()=>onRemoveFilter(item.id, TITLE_FILTER_TYPE_INCLUDES)} style={{
-									cursor: 'pointer'
-								}}>x</span>
-							</div>
-							)
-					})}
-					</div>
-					<hr/>
-					<h6 className='text-red-400'>Title Excludes</h6>
-					<div className='flex gap-2 flex-wrap'>
-					{filter[TITLE_FILTER_TYPE_EXCLUDES].map((item) => {
-						return (
-							<div key={item.id} className='flex'>
-								<Input
-									name='value'
-									value={item.value}
-									onChange={(e) => onChangeFilter(item.id, TITLE_FILTER_TYPE_EXCLUDES, e)}/>
-								<span onClick={()=>onRemoveFilter(item.id, TITLE_FILTER_TYPE_EXCLUDES)} style={{
-									cursor: 'pointer'
-								}}>x</span>
-							</div>
-							)
-					})}
-					</div>
-				</Section.Blur>
+				<TitleFilterSection/>
 				}
+
 				<Section.Blur className='gap-4 flex-grow'>
 					<Button onClick={OnAddRepo}>
 						Add Repository
