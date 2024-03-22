@@ -232,12 +232,6 @@ const RepoIssuesPage = () => {
 						Remove Link
 					</Checkbox>
 					<Checkbox
-						name='isLabelFilterSubtractive'
-						checked={_config.isLabelFilterSubtractive}
-						onChange={onChangeConfig}>
-						Subtractive Label Filter
-					</Checkbox>
-					<Checkbox
 						name='hideTitleFilter'
 						checked={_config.hideTitleFilter}
 						onChange={onChangeConfig}>

@@ -3,6 +3,7 @@ import { UseToastOptions } from "@chakra-ui/react"
 const TOAST_DEFAULT = {
 	isClosable: true,
   position: 'bottom-right',
+  duration: 9000,
 } as UseToastOptions
 
 const TOAST_OVERRIDE = {

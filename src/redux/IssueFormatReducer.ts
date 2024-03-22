@@ -9,7 +9,6 @@ export const issueFormatSlice = createSlice({
   name: 'issue-format',
   initialState: {
     removeLink: false,
-    isLabelFilterSubtractive: false,
     hideTitleFilter: true,
     hideLabels: true,
   },

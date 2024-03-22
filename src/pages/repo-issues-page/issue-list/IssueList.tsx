@@ -139,7 +139,7 @@ const IssueList = (props : IssueListType) => {
 		}
 
 		return filteredIssues
-	},[issues, _config.isLabelFilterSubtractive, filter])
+	},[issues, filter])
 
 	return (
 		<Section.Blur>

@@ -2,7 +2,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type IssueConfigStateType = {
   removeLink?: boolean;
-  isLabelFilterSubtractive?: boolean;
   hideTitleFilter?: boolean;
   hideLabels?: boolean;
 }
@@ -11,7 +10,6 @@ export const issueConfigSlice = createSlice({
   name: 'issue-config',
   initialState: {
     removeLink: false,
-    isLabelFilterSubtractive: false,
     hideTitleFilter: true,
     hideLabels: true,
   },
