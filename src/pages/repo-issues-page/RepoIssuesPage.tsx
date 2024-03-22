@@ -1,25 +1,27 @@
 import { useState } from 'react'
-import { OctoGetRepositoryIssuesApi } from '../../component/github-api/repository-issues/RepositoryIssuesApi'
-import { GitHubIssue } from '../../component/github-api/response-type/GithubIssueType'
-import Section from '../../component/section/Section'
-import { OctoGetRepositoriesApi } from '../../component/github-api/repository/RepositoriesApi'
-import { GitHubRepository } from '../../component/github-api/response-type/GithubRepositoryType'
+import { OctoGetRepositoryIssuesApi } from '@/components/github-api/repository-issues/RepositoryIssuesApi'
+import { GitHubIssue } from '@/components/github-api/response-type/GithubIssueType'
+import Section from '@/components/section/Section'
+import { OctoGetRepositoriesApi } from '@/components/github-api/repository/RepositoriesApi'
+import { GitHubRepository } from '@/components/github-api/response-type/GithubRepositoryType'
 import { IssueDiscordFilter, IssueDiscordFormatType, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
 import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {  editParams } from '../../redux/GithubParamsReducer'
-import { selectParams } from '../../redux/GithubParamsSelector'
-import { AppDispatch } from '../../store'
-import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '../../component/github-api/GithubBaseApiType'
-import { selectConfig } from '../../redux/IssueConfigSelector'
-import { editConfig } from '../../redux/IssueConfigReducer'
-import { Button, Checkbox,  FormControl, FormLabel, Input, Select, useColorMode } from '@chakra-ui/react'
+import {  editParams } from '@/redux/GithubParamsReducer'
+import { selectParams } from '@/redux/GithubParamsSelector'
+import { AppDispatch } from '@/store'
+import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '@/components/github-api/GithubBaseApiType'
+import { selectConfig } from '@/redux/IssueConfigSelector'
+import { editConfig } from '@/redux/IssueConfigReducer'
+import { Button, Checkbox,  FormControl, FormLabel, Input, Select, useColorMode, useToast } from '@chakra-ui/react'
+import { FailedToast, FetchingToast, LoadedToast, } from '@/helpers/ToastPresets'
 
 const RepoIssuesPage = () => {
 
 	const { toggleColorMode } = useColorMode();
+	const toast = useToast();
 
 	//#region Repository
 	const dispatch = useDispatch<AppDispatch>();
@@ -40,8 +42,20 @@ const RepoIssuesPage = () => {
 
 	const GetRepositories = async (e: React.FormEvent) => {
 		e.preventDefault();
+		toast( FetchingToast({
+			title: 'Repositories',
+		}) )
 		const data = await OctoGetRepositoriesApi(_params)
-		if(data === null) return;
+		toast.closeAll()
+		if(data === null) {
+			toast(FailedToast({
+				title: 'Fetching Repositories',
+			}) )
+			return;
+		}
+		toast(LoadedToast({
+			title: `${data.length} Repositories`,
+		}) )
 		setRepositories(data)
 	}
 
@@ -133,7 +147,8 @@ const RepoIssuesPage = () => {
 
 	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
 
-	const GetRepositoryIssues = async () => {
+	const GetRepositoryIssues = async (e: React.FormEvent) => {
+		e.preventDefault();
 		setIssues(undefined);
 		const data = await OctoGetRepositoryIssuesApi({
 			..._params,
@@ -189,7 +204,9 @@ const RepoIssuesPage = () => {
 			<Button onClick={toggleColorMode}>Mode</Button>
 			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
-					<form id='get-repositories-form'  className='flex flex-col gap-4 flex-grow' onSubmit={GetRepositories}>
+					<form
+						className='flex flex-col gap-4 flex-grow'
+						onSubmit={GetRepositories}>
 					<FormControl>
 						<FormLabel>Token</FormLabel>
 						<Input name='token' required value={_params.token ?? ''} onChange={onChangeParams}/>
@@ -198,19 +215,34 @@ const RepoIssuesPage = () => {
 						<FormLabel>Organization</FormLabel>
 						<Input name='org' required onChange={onChangeParams}/>
 					</FormControl>
-					<Button variant='outline' form='get-repositories-form' type='submit'>
+					<Button variant='outline' type='submit'>
 						Get Repositories
 					</Button>
 					</form>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<FormLabel>{`Select Repository (${repositories?.length ?? 0})`}</FormLabel>
-					<Select required value={_params.repo ?? ''} onChange={OnSelectRepository}>
-						<option value={''} disabled>...</option>
-						{repositories?.map((repo) => <option key={repo.id} value={repo.name}>{repo.name}</option>)}
-					</Select>
-					<Button onClick={GetRepositoryIssues} disabled={!_params.repo}>Get Issues</Button>
-					<Button onClick={ClearIssues}>Clear</Button>
+					<form onSubmit={GetRepositoryIssues} className='flex-grow'>
+						<FormLabel>
+							{`Select Repository (${repositories?.length ?? 0})`}
+						</FormLabel>
+						<Select
+							required
+							value={_params.repo ?? ''}
+							onChange={OnSelectRepository}>
+							<option value={''} disabled>...</option>
+							{repositories?.map((repo) => 
+								<option
+									key={repo.id}
+									value={repo.name}>
+										{repo.name}
+								</option>)
+							}
+						</Select>
+						<div className='flex gap-2 my-2'>
+							<Button type='submit' disabled={!_params.repo}>Get Issues</Button>
+							<Button onClick={ClearIssues}>Clear</Button>
+						</div>
+					</form>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
 					<FormControl>

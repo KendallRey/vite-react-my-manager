@@ -1,16 +1,17 @@
 import { useMemo, useState } from "react";
-import Section from "../../../component/section/Section"
+import Section from "@/components/section/Section"
 import { IssueListType } from "./IssueListType"
 import IssueItem from "./issue/IssueItem";
 import { TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES } from "../RepoIssuesPageType";
-import { OctoGetRepositoryIssuesApi } from "../../../component/github-api/repository-issues/RepositoryIssuesApi";
-import { GitHubIssue } from "../../../component/github-api/response-type/GithubIssueType";
+import { OctoGetRepositoryIssuesApi } from "@/components/github-api/repository-issues/RepositoryIssuesApi";
+import { GitHubIssue } from "@/components/github-api/response-type/GithubIssueType";
 import { useSelector } from "react-redux";
-import { selectParams } from "../../../redux/GithubParamsSelector";
-import { OCTO_KEY_REPO } from "../../../component/github-api/GithubBaseApiType";
-import { GitHubRepository } from "../../../component/github-api/response-type/GithubRepositoryType";
-import { selectConfig } from "../../../redux/IssueConfigSelector";
+import { selectParams } from "@/redux/GithubParamsSelector";
+import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
+import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
+import { selectConfig } from "@/redux/IssueConfigSelector";
 import { Button, FormControl, FormLabel, Input, Select, useToast } from "@chakra-ui/react";
+import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
 
 const IssueList = (props : IssueListType) => {
 
@@ -80,12 +81,9 @@ const IssueList = (props : IssueListType) => {
 
 	const GetRepositoryIssues = async (e: React.FormEvent) => {
 		e.preventDefault();
-		toast({
-			title: 'Fetching Issues',
-			position: 'bottom-right',
-			status: 'info',
-			isClosable: true,
-		})
+		toast(FetchingToast({
+			title: 'Issues',
+		}) )
 		setIssues(undefined);
 		if(!selectedRepository) return;
 		const data = await OctoGetRepositoryIssuesApi({
@@ -97,13 +95,16 @@ const IssueList = (props : IssueListType) => {
 				labels: labelValues.join(',')
 			}
 		})
-		if(data === null) return;
-		toast({
+		toast.closeAll();
+		if(data === null) {
+			toast(FailedToast({
+				title: `Fetching Issues`,
+			}) )
+			return;
+		}
+		toast(LoadedToast({
 			title: `${data.length} Issues found`,
-			position: 'bottom-right',
-			status: 'success',
-			isClosable: true,
-		})
+		}) )
 		setIssues(data);
 	}
 	

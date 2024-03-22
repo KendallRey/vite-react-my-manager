@@ -1,4 +1,4 @@
-import { GitHubIssue } from "../../../../component/github-api/response-type/GithubIssueType"
+import { GitHubIssue } from "@/components/github-api/response-type/GithubIssueType"
 
 
 export const FormatItemText = 'TEXT'

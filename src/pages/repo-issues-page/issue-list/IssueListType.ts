@@ -1,4 +1,4 @@
-import { GitHubRepository } from "../../../component/github-api/response-type/GithubRepositoryType";
+import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
 import { IssueDiscordFilter, IssueDiscordFormatType } from "../RepoIssuesPageType";
 import { FormatItem } from "./custom-item/CustomIssueItemType";
 

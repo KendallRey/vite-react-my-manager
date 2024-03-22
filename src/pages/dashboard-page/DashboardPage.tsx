@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { OctoGetRepositoryIssuesApi } from '../../component/github-api/repository-issues/RepositoryIssuesApi'
-import { SignOutApi } from '../../firebase/api/auth/AuthApi'
+import { OctoGetRepositoryIssuesApi } from '@/components/github-api/repository-issues/RepositoryIssuesApi'
+import { SignOutApi } from '@/firebase/api/auth/AuthApi'
 import style from './DashboardPage.module.scss'
-import { GitHubIssue } from '../../component/github-api/response-type/GithubIssueType'
-import Button from '../../component/button/Button'
-import Input from '../../component/input/Input'
+import { GitHubIssue } from '@/components/github-api/response-type/GithubIssueType'
+import Button from '@/components/button/Button'
+import Input from '@/components/input/Input'
 
 const DashboardPage = () => {
 

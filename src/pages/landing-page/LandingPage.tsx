@@ -1,11 +1,11 @@
-import SignInApi from '../../firebase/api/auth/AuthApi'
+import SignInApi from '@/firebase/api/auth/AuthApi'
 import style from './LandingPage.module.scss'
-import Input from '../../component/input/Input'
-import AuthProvider from '../../component/auth-provider/AuthProvider'
-import Section from '../../component/section/Section'
-import Button from '../../component/button/Button'
+import Input from '@/components/input/Input'
+import AuthProvider from '@/components/auth-provider/AuthProvider'
+import Section from '@/components/section/Section'
+import Button from '@/components/button/Button'
 import { useState } from 'react'
-import { CleanText } from '../../utils/DataHandler'
+import { CleanText } from '@/utils/DataHandler'
 import { useNavigate } from 'react-router-dom'
 
 const LandingPage = () => {

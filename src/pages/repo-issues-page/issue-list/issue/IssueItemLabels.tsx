@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { GithubIssueLabel } from "../../../../component/github-api/response-type/GithubIssueType"
+import { GithubIssueLabel } from "@/components/github-api/response-type/GithubIssueType"
 
 type IssueLabelT = {
   labels: GithubIssueLabel[];

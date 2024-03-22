@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 import useFirebaseAuth from "../firebase/api/auth/AuthHook"
-import ErrorPage from "../component/error-page/ErrorPage"
+import ErrorPage from "@/components/error-page/ErrorPage"
 
 const AuthLayout = () => {
 
