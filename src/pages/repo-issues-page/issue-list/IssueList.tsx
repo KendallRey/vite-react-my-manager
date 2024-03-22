@@ -10,14 +10,15 @@ import { selectParams } from "@/redux/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
 import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
 import { selectConfig } from "@/redux/IssueConfigSelector";
-import { Button, FormControl, FormLabel, Input, Select, useToast } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, IconButton, Input, Select, useToast } from "@chakra-ui/react";
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
+import { FaWindowClose } from "react-icons/fa";
 
 const IssueList = (props : IssueListType) => {
 
-	const { format, filter, repositories } = props;
+	const { filter, repositories, OnRemove } = props;
 	const _params = useSelector(selectParams);
-	const config = useSelector(selectConfig);
+	const _config = useSelector(selectConfig);
 
 	const toast = useToast();
 
@@ -138,10 +139,17 @@ const IssueList = (props : IssueListType) => {
 		}
 
 		return filteredIssues
-	},[issues, config.isLabelFilterSubtractive, filter])
+	},[issues, _config.isLabelFilterSubtractive, filter])
 
 	return (
-	<Section.Blur>
+		<Section.Blur>
+			{OnRemove &&
+			<div className="flex justify-end">
+				<IconButton onClick={OnRemove} aria-label={"Close"} isRound>
+					<FaWindowClose/>
+				</IconButton>
+			</div>
+			}
 			<form onSubmit={GetRepositoryIssues} className="flex flex-wrap justify-between">
 				<FormControl>
 					<FormLabel>Repository:</FormLabel>
@@ -205,11 +213,11 @@ const IssueList = (props : IssueListType) => {
 			<div className="text-center text-2xl">No Issue/s found.</div> :
 			filteredIssues.map((issue) => {
 				return (
-					<IssueItem key={issue.id} issue={issue} format={format}/>
+					<IssueItem key={issue.id} issue={issue}/>
 				)
 			})}
 			</div>
-	</Section.Blur>
+		</Section.Blur>
 	)
 }
 

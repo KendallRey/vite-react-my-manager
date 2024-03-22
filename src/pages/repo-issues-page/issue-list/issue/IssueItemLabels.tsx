@@ -13,7 +13,7 @@ const IssueLabels: React.FC<IssueLabelT> = (props) => {
   return (
     <>
     <br/>
-    <div className="mt-2">
+    <div className="mt-1 mb-2">
       {labels.map((label) => 
         <span key={label.id}
           className="bg-blue-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded border bg-transparent"

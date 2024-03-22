@@ -4,9 +4,8 @@ import { GitHubIssue } from '@/components/github-api/response-type/GithubIssueTy
 import Section from '@/components/section/Section'
 import { OctoGetRepositoriesApi } from '@/components/github-api/repository/RepositoriesApi'
 import { GitHubRepository } from '@/components/github-api/response-type/GithubRepositoryType'
-import { IssueDiscordFilter, IssueDiscordFormatType, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
+import { IssueDiscordFilter, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
-import { FormatItem } from './issue-list/custom-item/CustomIssueItemType'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {  editParams } from '@/redux/GithubParamsReducer'
@@ -17,6 +16,9 @@ import { selectConfig } from '@/redux/IssueConfigSelector'
 import { editConfig } from '@/redux/IssueConfigReducer'
 import { Button, Checkbox,  FormControl, FormLabel, Input, Select, useColorMode, useToast } from '@chakra-ui/react'
 import { FailedToast, FetchingToast, LoadedToast, } from '@/helpers/ToastPresets'
+import { selectFormat } from '@/redux/IssueFormatSelector'
+import { editFormat } from '@/redux/IssueFormatReducer'
+import { v4 as uuidv4 } from 'uuid';
 
 const RepoIssuesPage = () => {
 
@@ -24,9 +26,11 @@ const RepoIssuesPage = () => {
 	const toast = useToast();
 
 	//#region Repository
+
 	const dispatch = useDispatch<AppDispatch>();
 	const _params = useSelector(selectParams);
 	const _config = useSelector(selectConfig);
+	const _format = useSelector(selectFormat);
 
 	const onChangeParams = (e: RCE<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -36,6 +40,11 @@ const RepoIssuesPage = () => {
 	const onChangeConfig = (e: RCE<HTMLInputElement>) => {
 		const { name, checked } = e.target;
 		dispatch(editConfig({ [name]: checked }))
+	}
+
+	const onChangeFormat = (e: RCE<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		dispatch(editFormat({ [name]: value }))
 	}
 
 	const [repositories, setRepositories] = useState<GitHubRepository[]>()
@@ -75,20 +84,6 @@ const RepoIssuesPage = () => {
 			[OCTO_KEY_OWNER]: owner,
 		}))
 	}
-	//#endregion
-
-
-	//#region Format
-	const [format, setFormat] = useState<IssueDiscordFormatType>({
-		prefix: '',
-		suffix: '',
-	})
-
-	const OnChangeFormat = (e : RCE<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setFormat(prev => ({...prev, [name] : value }))
-	}
-
 	//#endregion
 
 	// 
@@ -145,7 +140,7 @@ const RepoIssuesPage = () => {
 
 	//#region Issues
 
-	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
+	const [_, setIssues] = useState<GitHubIssue[] | undefined>([])
 
 	const GetRepositoryIssues = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -165,38 +160,13 @@ const RepoIssuesPage = () => {
 	const ClearIssues = () => setIssues([]);
 	//#endregion
 
-	// 
-	// #region Custom Format (With Presets)
+	//#region Repos List
 
-	const [customFormats, setCustomFormats] = useState<FormatItem[]>([]);
-	
-	const onAddCustomFormat = () => {
-		const date = new Date();
-		const newID = date.toISOString() + date.getMilliseconds();
-		setCustomFormats(prev => prev.concat({
-			id:  newID,
-			name: '...',
-			type: 'TEXT',
-			value: '',
-		}))
-	}
+	const [repos, setRepos] = useState([uuidv4()]);
+	const OnAddRepo = () => setRepos(prev => (prev.concat(uuidv4())));
+	const OnRemoveRepo = (id: string) => setRepos(prev => (prev.filter((item) => item !== id)));
 
-	const onChangeCustomFormat = (id: string, e: RCE<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		setCustomFormats(prev => ([...prev.map((item) => {
-				if(item.id === id){
-					return {
-						...item,
-						[name]: value,
-					};
-				}
-				return item;
-			})]
-		))
-	}
-
-	// #endregion
-	// 
+	//#endregion
 
 	return (
 		<>
@@ -247,11 +217,11 @@ const RepoIssuesPage = () => {
 				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
 					<FormControl>
 						<FormLabel>Before Card Number</FormLabel>
-						<Input name='prefix' value={format.prefix} onChange={OnChangeFormat}/>
+						<Input name='prefix' value={_format.prefix} onChange={onChangeFormat}/>
 					</FormControl>
 					<FormControl>
 						<FormLabel>After Card Number</FormLabel>
-						<Input name='suffix' value={format.suffix} onChange={OnChangeFormat}/>
+						<Input name='suffix' value={_format.suffix} onChange={onChangeFormat}/>
 					</FormControl>
 				</Section.Blur>
 				<Section.Blur className='flex gap-4 flex-grow min-w-screen'>
@@ -331,8 +301,22 @@ const RepoIssuesPage = () => {
 					</div>
 				</Section.Blur>
 				}
+				<Section.Blur className='gap-4 flex-grow'>
+					<Button onClick={OnAddRepo}>
+						Add Repository
+					</Button>
+				</Section.Blur>
 			</div>
-			{<IssueList filter={filter} format={format} formats={[]} repositories={repositories}/>}
+			{repos.map((repo) => {
+				return (
+					<IssueList
+						key={repo}
+						filter={filter}
+						formats={[]}
+						OnRemove={repos.length !== 0 ? ()=>OnRemoveRepo(repo) : undefined}
+						repositories={repositories}/>
+					)
+			})}
 		</div>
 		</>
 	)

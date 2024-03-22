@@ -2,27 +2,29 @@ import { IssueItemType } from "./IssueItemType";
 import { useSelector } from "react-redux";
 import { selectConfig } from "../../../../redux/IssueConfigSelector";
 import IssueLabels from "./IssueItemLabels";
+import { selectFormat } from "@/redux/IssueFormatSelector";
 
 const IssueItem = (props: IssueItemType) => {
 
-    const config = useSelector(selectConfig);
+    const _config = useSelector(selectConfig);
+    const _format = useSelector(selectFormat);
 
-    const { issue, format } = props;
+    const { issue } = props;
 
     return (
     <div>
-        {config.removeLink ?
+        {_config.removeLink ?
         <>
-        - {format?.prefix}{issue.number}{format?.suffix} {issue.title}
+        - {_format?.prefix}{issue.number}{_format?.suffix} {issue.title}
         </>
         :
         <>
-        - __[{format?.prefix}{issue.number}{format?.suffix}](
+        - __[{_format?.prefix}{issue.number}{_format?.suffix}](
         <a href={issue.html_url} target="_blank" rel="noopener noreferrer">{issue.html_url}</a>
         )__ {issue.title}
         </>
         }
-        {!config.hideLabels && <IssueLabels labels={issue.labels}/> }
+        {!_config.hideLabels && <IssueLabels labels={issue.labels}/> }
     </div>
     )
 }
