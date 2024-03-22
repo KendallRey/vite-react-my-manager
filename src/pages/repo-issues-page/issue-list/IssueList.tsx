@@ -9,16 +9,16 @@ import { useSelector } from "react-redux";
 import { selectParams } from "@/redux/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
 import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
-import { selectConfig } from "@/redux/IssueConfigSelector";
 import { Button, FormControl, FormLabel, IconButton, Input, Select, useToast } from "@chakra-ui/react";
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
 import { FaWindowClose } from "react-icons/fa";
+import { selectGithub } from "@/redux/GithubSelector";
 
 const IssueList = (props : IssueListType) => {
 
-	const { filter, repositories, OnRemove } = props;
+	const { filter, OnRemove } = props;
 	const _params = useSelector(selectParams);
-	const _config = useSelector(selectConfig);
+  const _github = useSelector(selectGithub);
 
 	const toast = useToast();
 
@@ -67,7 +67,7 @@ const IssueList = (props : IssueListType) => {
 
 	const OnSelectRepository = (e : RCE<HTMLSelectElement>) => {
 		const { value } = e.target
-		const selectedRepository = repositories?.find((repo) => repo.id.toString() === value);
+		const selectedRepository = _github.repositories?.find((repo) => repo.id.toString() === value);
 		if(!selectedRepository) return;
 
 		setSelectedRepository(selectedRepository);
@@ -155,7 +155,7 @@ const IssueList = (props : IssueListType) => {
 					<FormLabel>Repository:</FormLabel>
 					<Select value={selectedRepository?.id ?? ''} onChange={OnSelectRepository} required>
 						<option value={''} disabled>Select Repo</option>
-						{repositories?.map((item) => {
+						{_github.repositories?.map((item) => {
 							return (
 								<option key={item.id} value={item.id}>{item.name}</option>
 							)

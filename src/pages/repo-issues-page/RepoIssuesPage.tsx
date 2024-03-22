@@ -1,9 +1,6 @@
 import { useState } from 'react'
-import { OctoGetRepositoryIssuesApi } from '@/components/github-api/repository-issues/RepositoryIssuesApi'
-import { GitHubIssue } from '@/components/github-api/response-type/GithubIssueType'
 import Section from '@/components/section/Section'
 import { OctoGetRepositoriesApi } from '@/components/github-api/repository/RepositoriesApi'
-import { GitHubRepository } from '@/components/github-api/response-type/GithubRepositoryType'
 import { IssueDiscordFilter, TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES, TitleFilterType } from './RepoIssuesPageType'
 import IssueList from './issue-list/IssueList'
 import React from 'react'
@@ -11,14 +8,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import {  editParams } from '@/redux/GithubParamsReducer'
 import { selectParams } from '@/redux/GithubParamsSelector'
 import { AppDispatch } from '@/store'
-import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from '@/components/github-api/GithubBaseApiType'
 import { selectConfig } from '@/redux/IssueConfigSelector'
-import { editConfig } from '@/redux/IssueConfigReducer'
-import { Button, Checkbox,  FormControl, FormLabel, Input, Select, useColorMode, useToast } from '@chakra-ui/react'
+import { Button, Checkbox,  FormControl, FormLabel, Input, useColorMode, useToast } from '@chakra-ui/react'
 import { FailedToast, FetchingToast, LoadedToast, } from '@/helpers/ToastPresets'
-import { selectFormat } from '@/redux/IssueFormatSelector'
-import { editFormat } from '@/redux/IssueFormatReducer'
 import { v4 as uuidv4 } from 'uuid';
+import IssueSettingsFab from './floating-action/issue-settings-fab'
+import ConfigSection from './config-section/config-section'
+import FormatSection from './format-section/format-section'
+import RepositorySection from './repository-section/repository-section'
+import { editGithub } from '@/redux/GithubReducer'
 
 const RepoIssuesPage = () => {
 
@@ -30,24 +28,11 @@ const RepoIssuesPage = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const _params = useSelector(selectParams);
 	const _config = useSelector(selectConfig);
-	const _format = useSelector(selectFormat);
 
 	const onChangeParams = (e: RCE<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		dispatch(editParams({ [name]: value }))
 	}
-
-	const onChangeConfig = (e: RCE<HTMLInputElement>) => {
-		const { name, checked } = e.target;
-		dispatch(editConfig({ [name]: checked }))
-	}
-
-	const onChangeFormat = (e: RCE<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		dispatch(editFormat({ [name]: value }))
-	}
-
-	const [repositories, setRepositories] = useState<GitHubRepository[]>()
 
 	const GetRepositories = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -65,25 +50,12 @@ const RepoIssuesPage = () => {
 		toast(LoadedToast({
 			title: `${data.length} Repositories`,
 		}) )
-		setRepositories(data)
-	}
 
-	const OnSelectRepository = (e : RCE<HTMLSelectElement>) => {
-		const { value } = e.target;
-		if(!repositories) return;
-
-		const selected = repositories.find((repo) => repo.name === value);
-		if(!selected) return;
-
-		ClearIssues();
-		const owner = selected.owner.login
-		const name = selected.name
-
-		dispatch(editParams({ 
-			[OCTO_KEY_REPO]: name,
-			[OCTO_KEY_OWNER]: owner,
+		dispatch(editGithub({ 
+			repositories: data,
 		}))
 	}
+
 	//#endregion
 
 	// 
@@ -101,11 +73,9 @@ const RepoIssuesPage = () => {
 	}
 
 	const onAddFilter = (type : TitleFilterType) => {
-		const date = new Date();
-		const newID = date.getMilliseconds()+date.getSeconds()+'-filter'
 		setFilter(prev => ({...prev,
 			[type]: prev[type].concat({
-				id: newID,
+				id: uuidv4(),
 				value: '',
 			})
 		}))
@@ -138,28 +108,6 @@ const RepoIssuesPage = () => {
 	// #endregion
 	// 
 
-	//#region Issues
-
-	const [_, setIssues] = useState<GitHubIssue[] | undefined>([])
-
-	const GetRepositoryIssues = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setIssues(undefined);
-		const data = await OctoGetRepositoryIssuesApi({
-			..._params,
-			params: {
-				sort: 'created',
-				direction: 'asc',
-				labels: 'wontfix,enhancement',
-			}
-		})
-		if(data === null) return;
-		setIssues(data);
-	}
-	
-	const ClearIssues = () => setIssues([]);
-	//#endregion
-
 	//#region Repos List
 
 	const [repos, setRepos] = useState([uuidv4()]);
@@ -171,6 +119,7 @@ const RepoIssuesPage = () => {
 	return (
 		<>
 		<div className='flex min-h-screen flex-col mx-2 gap-5'>
+
 			<Button onClick={toggleColorMode}>Mode</Button>
 			<div className='flex flex-wrap gap-5'>
 				<Section.Blur className='flex gap-4 flex-grow'>
@@ -190,60 +139,13 @@ const RepoIssuesPage = () => {
 					</Button>
 					</form>
 				</Section.Blur>
-				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<form onSubmit={GetRepositoryIssues} className='flex-grow'>
-						<FormLabel>
-							{`Select Repository (${repositories?.length ?? 0})`}
-						</FormLabel>
-						<Select
-							required
-							value={_params.repo ?? ''}
-							onChange={OnSelectRepository}>
-							<option value={''} disabled>...</option>
-							{repositories?.map((repo) => 
-								<option
-									key={repo.id}
-									value={repo.name}>
-										{repo.name}
-								</option>)
-							}
-						</Select>
-						<div className='flex gap-2 my-2'>
-							<Button type='submit' disabled={!_params.repo}>Get Issues</Button>
-							<Button onClick={ClearIssues}>Clear</Button>
-						</div>
-					</form>
-				</Section.Blur>
-				<Section.Blur className='flex gap-4 flex-grow flex-wrap'>
-					<FormControl>
-						<FormLabel>Before Card Number</FormLabel>
-						<Input name='prefix' value={_format.prefix} onChange={onChangeFormat}/>
-					</FormControl>
-					<FormControl>
-						<FormLabel>After Card Number</FormLabel>
-						<Input name='suffix' value={_format.suffix} onChange={onChangeFormat}/>
-					</FormControl>
-				</Section.Blur>
-				<Section.Blur className='flex gap-4 flex-grow min-w-screen'>
-					<Checkbox
-						name='removeLink'
-						checked={_config.removeLink}
-						onChange={onChangeConfig}>
-						Remove Link
-					</Checkbox>
-					<Checkbox
-						name='hideTitleFilter'
-						checked={_config.hideTitleFilter}
-						onChange={onChangeConfig}>
-						Hide Title Filter
-					</Checkbox>
-					<Checkbox
-						name='hideLabels'
-						checked={_config.hideLabels}
-						onChange={onChangeConfig}>
-						Hide Labels
-					</Checkbox>
-				</Section.Blur>
+
+				<RepositorySection/>
+
+				<FormatSection/>
+
+				<ConfigSection/>
+
 				{!_config.hideTitleFilter &&
 				<Section.Blur className='gap-4 flex-grow'>
 					<Checkbox name='isOn' checked={filter.isOn} onChange={onToggleFilter}>
@@ -301,17 +203,19 @@ const RepoIssuesPage = () => {
 					</Button>
 				</Section.Blur>
 			</div>
+
 			{repos.map((repo) => {
 				return (
 					<IssueList
 						key={repo}
 						filter={filter}
 						formats={[]}
-						OnRemove={repos.length !== 0 ? ()=>OnRemoveRepo(repo) : undefined}
-						repositories={repositories}/>
+						OnRemove={repos.length !== 0 ? ()=>OnRemoveRepo(repo) : undefined}/>
 					)
 			})}
 		</div>
+
+		<IssueSettingsFab/>
 		</>
 	)
 }
