@@ -5,6 +5,7 @@ import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './store.ts'
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
+import PreferenceProvider from './context/preference.tsx'
 
 const theme = extendTheme({
   config: {
@@ -32,7 +33,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={'dark'} />
         <Provider store={store}>
-          <App />
+          <PreferenceProvider>
+            <App />
+          </PreferenceProvider>
         </Provider>
     </ChakraProvider>
   </React.StrictMode>,

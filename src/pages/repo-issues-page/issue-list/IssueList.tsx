@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import Section from "@/components/section/Section"
 import { IssueListType } from "./IssueListType"
 import IssueItem from "./issue/IssueItem";
-import { TITLE_FILTER_TYPE_EXCLUDES, TITLE_FILTER_TYPE_INCLUDES } from "../RepoIssuesPageType";
 import { OctoGetRepositoryIssuesApi } from "@/components/github-api/repository-issues/RepositoryIssuesApi";
 import { GitHubIssue } from "@/components/github-api/response-type/GithubIssueType";
 import { useSelector } from "react-redux";
@@ -13,12 +12,15 @@ import { Button, FormControl, FormLabel, IconButton, Input, Select, useToast } f
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
 import { FaWindowClose } from "react-icons/fa";
 import { selectGithub } from "@/redux/GithubSelector";
+import { selectFilter } from "@/redux/GithubFilterSelector";
 
-const IssueList = (props : IssueListType) => {
+const IssueList: React.FC<IssueListType> = (props) => {
 
-	const { filter, OnRemove } = props;
+  const { OnRemove } = props;
+
 	const _params = useSelector(selectParams);
   const _github = useSelector(selectGithub);
+  const _filter = useSelector(selectFilter);
 
 	const toast = useToast();
 
@@ -119,18 +121,18 @@ const IssueList = (props : IssueListType) => {
 	
 	const filteredIssues = useMemo(() => {
 		let filteredIssues = issues;
-		if(filter.isOn){
+		if(_filter.title_on){
 			filteredIssues = filteredIssues?.filter((item) =>{
 				const title = item.title.toLowerCase();
 				let isIncluded = true;
-				if(filter.isOn){
-					if(filter[TITLE_FILTER_TYPE_INCLUDES].length !== 0){
-						const toIncludes = filter[TITLE_FILTER_TYPE_INCLUDES].map((item) => item.value.toLowerCase());
-						isIncluded = toIncludes.some((include) => title.includes(include));
+				if(_filter.title_on){
+					if(_filter.title_includes?.length !== 0){
+						const toIncludes = _filter.title_includes?.map((item) => item.value.toLowerCase());
+						isIncluded = toIncludes?.some((include) => title.includes(include)) ?? true;
 					}
-					if(filter[TITLE_FILTER_TYPE_EXCLUDES].length !== 0){
-						const toExcludes = filter[TITLE_FILTER_TYPE_EXCLUDES].map((item) => item.value.toLowerCase());
-						isIncluded = !toExcludes.includes(title);
+					if(_filter.title_excludes?.length !== 0){
+						const toExcludes = _filter.title_excludes?.map((item) => item.value.toLowerCase());
+						isIncluded = !toExcludes?.includes(title);
 					}
 				}
 
@@ -139,7 +141,7 @@ const IssueList = (props : IssueListType) => {
 		}
 
 		return filteredIssues
-	},[issues, filter])
+	},[issues, _filter.title_on])
 
 	return (
 		<Section.Blur>
