@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Section from "@/components/section/Section"
 import { IssueListType } from "./IssueListType"
 import IssueItem from "./issue/IssueItem";
@@ -10,26 +10,58 @@ import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
 import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
 import { Button, FormControl, FormLabel, IconButton, Input, Select, useToast } from "@chakra-ui/react";
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
-import { FaWindowClose } from "react-icons/fa";
+import { FaSave, FaWindowClose } from "react-icons/fa";
 import { selectGithub } from "@/redux/GithubSelector";
 import { selectFilter } from "@/redux/GithubFilterSelector";
+import { PreferenceContext } from "@/context/preference";
+import { CgPlayListRemove } from "react-icons/cg";
+import { v4 as uuidv4 } from 'uuid';
 
 const IssueList: React.FC<IssueListType> = (props) => {
 
-  const { OnRemove } = props;
+	const { OnRemove, repoName } = props;
+	const { addSavedRepo, removeSavedRepo, repos, savedRepos } = useContext(PreferenceContext);
 
 	const _params = useSelector(selectParams);
-  const _github = useSelector(selectGithub);
-  const _filter = useSelector(selectFilter);
+	const _github = useSelector(selectGithub);
+	const _filter = useSelector(selectFilter);
 
 	const toast = useToast();
+
+	const [loaded, setLoaded] = useState(false);
+
+	useEffect(() => {
+		if (!loaded) {
+			OnLoadRepo();
+			setLoaded(true);
+		}
+	},[loaded])
+
+	const OnLoadRepo = async () => {
+		if(!repoName || !repos.length) return;
+		if(!repos.includes(repoName)) return;
+		const repo = _github.repositories?.find((item) => item.name === repoName);
+		if(!repo) return;
+		setSelectedRepository(repo);
+		GetRepositoryIssues(repo);
+	}
+
+	const OnSaveRepo = () => {
+		if(!selectedRepository) return;
+		addSavedRepo(selectedRepository.name);
+	}
+
+	const OnRemoveRepo = () => {
+		if(!selectedRepository) return;
+		removeSavedRepo(selectedRepository.name);
+	}
 
 	// 
 	// #region Filter Labels
 
 	type FilterLabelType = {
-			id: string;
-			value: string;
+		id: string;
+		value: string;
 	}
 
 	const [labels, setLabels] = useState<FilterLabelType[]>([]);
@@ -50,9 +82,8 @@ const IssueList: React.FC<IssueListType> = (props) => {
 				return;
 		}
 
-		const date = new Date();
 		const newLabelToAdd = {
-			id: "label"+date.toISOString()+date.getMilliseconds(),
+			id: uuidv4(),
 			value: formatLabelToAdd,
 		}
 		setLabels((prev) => prev.concat(newLabelToAdd))
@@ -78,20 +109,25 @@ const IssueList: React.FC<IssueListType> = (props) => {
 	// #endregion
 	// 
 
-		//#region Issues
+	//#region Issues
+
+	const OnSubmitGetRepositories = (e: React.FormEvent) => {
+		e.preventDefault();
+		GetRepositoryIssues()
+	}
 
 	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
 
-	const GetRepositoryIssues = async (e: React.FormEvent) => {
-		e.preventDefault();
+	const GetRepositoryIssues = async (repo? : GitHubRepository) => {
 		toast(FetchingToast({
 			title: 'Issues',
 		}) )
 		setIssues(undefined);
-		if(!selectedRepository) return;
+		const repoToLoad = repo ?? selectedRepository;
+		if(!repoToLoad) return;
 		const data = await OctoGetRepositoryIssuesApi({
 			..._params,
-			[OCTO_KEY_REPO]:  selectedRepository.name,
+			[OCTO_KEY_REPO]:  repoToLoad.name,
 			params: {
 				sort: 'created',
 				direction: 'asc',
@@ -145,14 +181,22 @@ const IssueList: React.FC<IssueListType> = (props) => {
 
 	return (
 		<Section.Blur>
-			{OnRemove &&
-			<div className="flex justify-end">
-				<IconButton onClick={OnRemove} aria-label={"Close"} isRound>
-					<FaWindowClose/>
+			<div className="flex justify-end gap-2">
+				{(selectedRepository && savedRepos.includes(selectedRepository.name)) &&
+				<IconButton onClick={OnRemoveRepo} aria-label={"Remove"} isRound>
+					<CgPlayListRemove />
 				</IconButton>
+				}
+				<IconButton onClick={OnSaveRepo} aria-label={"Save"} isRound>
+					<FaSave/>
+				</IconButton>
+				{OnRemove &&
+					<IconButton onClick={OnRemove} aria-label={"Close"} isRound>
+						<FaWindowClose/>
+					</IconButton>
+				}
 			</div>
-			}
-			<form onSubmit={GetRepositoryIssues} className="flex flex-wrap justify-between">
+			<form onSubmit={OnSubmitGetRepositories} className="flex flex-wrap justify-between">
 				<FormControl>
 					<FormLabel>Repository:</FormLabel>
 					<Select value={selectedRepository?.id ?? ''} onChange={OnSelectRepository} required>

@@ -1,5 +1,13 @@
 import Section from "@/components/section/Section";
-import { addTitleExcludeFilter, addTitleIncludeFilter, onChangeTitleExcludeFilter, onChangeTitleIncludeFilter, removeTitleExcludeFilter, removeTitleIncludeFilter, toggleTitleFilter } from "@/redux/GithubFilterReducer";
+import {
+	addTitleExcludeFilter,
+	addTitleIncludeFilter,
+	onChangeTitleExcludeFilter,
+	onChangeTitleIncludeFilter,
+	removeTitleExcludeFilter,
+	removeTitleIncludeFilter,
+	toggleTitleFilter
+} from "@/redux/GithubFilterReducer";
 import { selectFilter } from "@/redux/GithubFilterSelector";
 import { AppDispatch } from "@/store";
 import { Button, Checkbox, IconButton, Input } from "@chakra-ui/react";

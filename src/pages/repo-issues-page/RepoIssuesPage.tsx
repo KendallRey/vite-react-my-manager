@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Section from '@/components/section/Section'
 import IssueList from './issue-list/IssueList'
 import { selectConfig } from '@/redux/IssueConfigSelector'
@@ -11,10 +11,20 @@ import RepositorySection from './repository-section/repository-section'
 import TitleFilterSection from './title-filter-section/title-filter-section'
 import InfoSection from './info-section/info-section'
 import { useSelector } from 'react-redux'
+import { PreferenceContext } from '@/context/preference'
 
 const RepoIssuesPage = () => {
 
 	const { toggleColorMode } = useColorMode();
+	const {
+		loadSavedRepos,
+		savedRepos,
+		removeSavedRepo,
+		repos: loadedRepos,
+		clearLoadedSavedRepos,
+	} = useContext(PreferenceContext);
+
+	const OnClearRepos = () => setRepos([])
 
 	//#region Repository
 
@@ -25,6 +35,15 @@ const RepoIssuesPage = () => {
 	const [repos, setRepos] = useState([uuidv4()]);
 	const OnAddRepo = () => setRepos(prev => (prev.concat(uuidv4())));
 	const OnRemoveRepo = (id: string) => setRepos(prev => (prev.filter((item) => item !== id)));
+
+	const OnLoadSavedRepos = async () => {
+		loadSavedRepos();
+		setRepos(savedRepos);
+	}
+
+	const OnClearLoadedRepos = async () => {
+		clearLoadedSavedRepos();
+	}
 
 	//#endregion
 
@@ -47,10 +66,37 @@ const RepoIssuesPage = () => {
 				<TitleFilterSection/>
 				}
 
-				<Section.Blur className='gap-4 flex-grow'>
+				<Section.Blur className='flex-grow'>
+					<div className='flex gap-4 flex-wrap'>
 					<Button onClick={OnAddRepo}>
 						Add Repository
 					</Button>
+					<Button onClick={OnClearRepos}>
+						Clear List
+					</Button>
+					{!!savedRepos.length &&
+					<>
+					<Button onClick={OnLoadSavedRepos}>
+						Load Saved Repos ({savedRepos.length})
+					</Button>
+					<Button onClick={OnClearLoadedRepos}>
+						Clear Loaded Repos ({loadedRepos.length})
+					</Button>
+					</>
+					}
+					</div>
+					<hr className='my-2'/>
+					<small>Saved Repos ({savedRepos.length})</small>
+					<div className='flex gap-2 my-2 flex-wrap'>
+					{savedRepos.map((item) => 
+					<Button
+						key={item}
+						size={'xs'}
+						onClick={()=>removeSavedRepo(item)}>
+						{item}
+					</Button>
+						)}
+					</div>
 				</Section.Blur>
 			</div>
 
@@ -58,6 +104,7 @@ const RepoIssuesPage = () => {
 				return (
 					<IssueList
 						key={repo}
+						repoName={repo}
 						OnRemove={repos.length !== 0 ? ()=>OnRemoveRepo(repo) : undefined}/>
 					)
 			})}
