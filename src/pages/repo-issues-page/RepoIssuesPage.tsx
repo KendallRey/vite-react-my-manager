@@ -218,7 +218,7 @@ const RepoIssuesPage = () => {
 						<Input name='prefix' value={format.prefix} onChange={OnChangeFormat}/>
 					</FormControl>
 					<FormControl>
-						<FormLabel>After Card Numbe</FormLabel>
+						<FormLabel>After Card Number</FormLabel>
 						<Input name='suffix' value={format.suffix} onChange={OnChangeFormat}/>
 					</FormControl>
 				</Section.Blur>
