@@ -65,19 +65,19 @@ const IssueSettingsFab = () => {
 					<PopoverBody className='flex flex-col'>
 						<Checkbox
 							name='removeLink'
-							checked={_config.removeLink}
+							isChecked={_config.removeLink}
 							onChange={onChangeConfig}>
 							Remove Link
 						</Checkbox>
 						<Checkbox
 							name='hideLabels'
-							checked={_config.hideLabels}
+							isChecked={_config.hideLabels}
 							onChange={onChangeConfig}>
 							Hide Labels
 						</Checkbox>
 						<Checkbox
 							name='simplifyList'
-							checked={_config.simplifyList}
+							isChecked={_config.simplifyList}
 							onChange={onChangeConfig}>
 							Simplify List
 						</Checkbox>

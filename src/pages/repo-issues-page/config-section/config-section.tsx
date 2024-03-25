@@ -15,36 +15,36 @@ const ConfigSection = () => {
 		dispatch(editConfig({ [name]: checked }))
 	}
 
-  return (
-    <Section.Blur className='flex gap-4 flex-grow min-w-screen flex-wrap'>
-      <Stack direction={'column'}>
-        <Checkbox
-          name='removeLink'
-          checked={_config.removeLink}
-          onChange={onChangeConfig}>
-          Remove Link
-        </Checkbox>
-        <Checkbox
-          name='hideTitleFilter'
-          checked={_config.hideTitleFilter}
-          onChange={onChangeConfig}>
-          Hide Title Filter
-        </Checkbox>
-        <Checkbox
-          name='hideLabels'
-          checked={_config.hideLabels}
-          onChange={onChangeConfig}>
-          Hide Labels
-        </Checkbox>
-        <Checkbox
-          name='simplifyList'
-          checked={_config.simplifyList}
-          onChange={onChangeConfig}>
-          Simplify List
-        </Checkbox>
-      </Stack>
-    </Section.Blur>
-  )
+	return (
+		<Section.Blur className='flex gap-4 flex-grow min-w-screen flex-wrap'>
+			<Stack direction={'column'}>
+				<Checkbox
+					name='removeLink'
+					isChecked={_config.removeLink}
+					onChange={onChangeConfig}>
+					Remove Link
+				</Checkbox>
+				<Checkbox
+					name='hideTitleFilter'
+					isChecked={_config.hideTitleFilter}
+					onChange={onChangeConfig}>
+					Hide Title Filter
+				</Checkbox>
+				<Checkbox
+					name='hideLabels'
+					isChecked={_config.hideLabels}
+					onChange={onChangeConfig}>
+					Hide Labels
+				</Checkbox>
+				<Checkbox
+					name='simplifyList'
+					isChecked={_config.simplifyList}
+					onChange={onChangeConfig}>
+					Simplify List
+				</Checkbox>
+			</Stack>
+		</Section.Blur>
+	)
 }
 
 export default ConfigSection;
