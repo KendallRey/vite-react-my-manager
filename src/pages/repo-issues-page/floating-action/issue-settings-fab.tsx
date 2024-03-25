@@ -10,16 +10,19 @@ import {
 	PopoverCloseButton,
 	PopoverContent,
 	PopoverHeader,
-	PopoverTrigger
+	PopoverTrigger,
+	useToast
 } from '@chakra-ui/react'
 
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { TbSettingsCode } from "react-icons/tb";
+import { RiChatDeleteLine } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 
 const IssueSettingsFab = () => {
 
 	const _config = useSelector(selectConfig);
+	const toast = useToast();
 	const dispatch = useDispatch<AppDispatch>();
 
 	const onChangeConfig = (e: RCE<HTMLInputElement>) => {
@@ -39,6 +42,10 @@ const IssueSettingsFab = () => {
 			top: document.body.scrollHeight,
 			behavior: 'smooth'
 		});
+	}
+
+	const onClearToasts = () => {
+		toast.closeAll();
 	}
 
 	return (
@@ -78,6 +85,12 @@ const IssueSettingsFab = () => {
 				</PopoverContent>
 			</Popover>
 			<hr/>
+			<IconButton aria-label={'Clear Notifications'} isRound
+				onClick={onClearToasts}
+				variant={'solid'}
+				colorScheme='teal'>
+				<RiChatDeleteLine />
+			</IconButton>
 			<IconButton aria-label={'Scroll Up'} isRound
 				onClick={onScrollTop}
 				variant={'solid'}
