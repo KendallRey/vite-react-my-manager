@@ -4,6 +4,7 @@ export type IssueConfigStateType = {
   removeLink?: boolean;
   hideTitleFilter?: boolean;
   hideLabels?: boolean;
+  simplifyList?: boolean;
 }
 
 export const issueConfigSlice = createSlice({
@@ -12,6 +13,7 @@ export const issueConfigSlice = createSlice({
     removeLink: false,
     hideTitleFilter: true,
     hideLabels: true,
+    simplifyList: false,
   },
   reducers: {
     editConfig(state, action : PayloadAction<IssueConfigStateType>){

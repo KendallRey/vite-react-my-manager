@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { selectParams } from "@/redux/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
 import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
-import { Button, FormControl, FormLabel, IconButton, Input, Select, useToast } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, IconButton, Input, Select, Stat, StatHelpText, StatLabel, StatNumber, useToast } from "@chakra-ui/react";
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
 import { FaSave, FaWindowClose } from "react-icons/fa";
 import { selectGithub } from "@/redux/GithubSelector";
@@ -16,6 +16,8 @@ import { selectFilter } from "@/redux/GithubFilterSelector";
 import { PreferenceContext } from "@/context/preference";
 import { CgPlayListRemove } from "react-icons/cg";
 import { v4 as uuidv4 } from 'uuid';
+import { GetIDs } from "@/helpers/array-helper";
+import { selectConfig } from "@/redux/IssueConfigSelector";
 
 const IssueList: React.FC<IssueListType> = (props) => {
 
@@ -25,6 +27,7 @@ const IssueList: React.FC<IssueListType> = (props) => {
 	const _params = useSelector(selectParams);
 	const _github = useSelector(selectGithub);
 	const _filter = useSelector(selectFilter);
+	const _config = useSelector(selectConfig);
 
 	const toast = useToast();
 
@@ -35,20 +38,33 @@ const IssueList: React.FC<IssueListType> = (props) => {
 			OnLoadRepo();
 			setLoaded(true);
 		}
-	},[loaded])
+	},[loaded]);
+
+	const SavedReposIDs = useMemo(()=>GetIDs(savedRepos),[savedRepos])
 
 	const OnLoadRepo = async () => {
 		if(!repoName || !repos.length) return;
-		if(!repos.includes(repoName)) return;
+		const savedRepoIDs = GetIDs(repos);
+		if(!savedRepoIDs.includes(repoName)) return;
 		const repo = _github.repositories?.find((item) => item.name === repoName);
 		if(!repo) return;
+		const savedRepo = savedRepos.find((item) => item.id === repo.name);
 		setSelectedRepository(repo);
-		GetRepositoryIssues(repo);
+		const savedLabels = savedRepo?.labels.map((item) => ({
+			id: uuidv4(),
+			value: item
+		})) ?? [];
+		setLabels(savedLabels);
+		GetRepositoryIssues(repo, savedRepo?.labels);
 	}
 
 	const OnSaveRepo = () => {
 		if(!selectedRepository) return;
-		addSavedRepo(selectedRepository.name);
+		const repoConfig = {
+			id: selectedRepository.name,
+			labels: labelValues,
+		}
+		addSavedRepo(repoConfig);
 	}
 
 	const OnRemoveRepo = () => {
@@ -118,7 +134,7 @@ const IssueList: React.FC<IssueListType> = (props) => {
 
 	const [issues, setIssues] = useState<GitHubIssue[] | undefined>([])
 
-	const GetRepositoryIssues = async (repo? : GitHubRepository) => {
+	const GetRepositoryIssues = async (repo? : GitHubRepository, labels?: string[]) => {
 		toast(FetchingToast({
 			title: 'Issues',
 		}) )
@@ -131,7 +147,7 @@ const IssueList: React.FC<IssueListType> = (props) => {
 			params: {
 				sort: 'created',
 				direction: 'asc',
-				labels: labelValues.join(',')
+				labels: labels?.join(',') ?? labelValues.join(',')
 			}
 		})
 		toast.closeAll();
@@ -182,7 +198,7 @@ const IssueList: React.FC<IssueListType> = (props) => {
 	return (
 		<Section.Blur>
 			<div className="flex justify-end gap-2">
-				{(selectedRepository && savedRepos.includes(selectedRepository.name)) &&
+				{(selectedRepository && SavedReposIDs.includes(selectedRepository.name)) &&
 				<IconButton onClick={OnRemoveRepo} aria-label={"Remove"} isRound>
 					<CgPlayListRemove />
 				</IconButton>
@@ -196,6 +212,14 @@ const IssueList: React.FC<IssueListType> = (props) => {
 					</IconButton>
 				}
 			</div>
+			{_config.simplifyList ?
+			<Stat>
+				<StatLabel>Repository</StatLabel>
+				<StatNumber>{selectedRepository?.name}</StatNumber>
+				<StatHelpText>Filter Labels: [{labelValues.join(', ')}]</StatHelpText>
+			</Stat>
+			:
+			<>
 			<form onSubmit={OnSubmitGetRepositories} className="flex flex-wrap justify-between">
 				<FormControl>
 					<FormLabel>Repository:</FormLabel>
@@ -249,6 +273,8 @@ const IssueList: React.FC<IssueListType> = (props) => {
 						)
 				})}
 			</div>
+			</>
+			}
 			<hr className="my-2"/>
 			<div className="my-2">
 			<span>Issue/s ({filteredIssues?.length})</span>

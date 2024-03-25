@@ -12,6 +12,7 @@ import TitleFilterSection from './title-filter-section/title-filter-section'
 import InfoSection from './info-section/info-section'
 import { useSelector } from 'react-redux'
 import { PreferenceContext } from '@/context/preference'
+import { GetIDs } from '@/helpers/array-helper'
 
 const RepoIssuesPage = () => {
 
@@ -38,7 +39,8 @@ const RepoIssuesPage = () => {
 
 	const OnLoadSavedRepos = async () => {
 		loadSavedRepos();
-		setRepos(savedRepos);
+		const savedRepoIDs = GetIDs(savedRepos);
+		setRepos(savedRepoIDs);
 	}
 
 	const OnClearLoadedRepos = async () => {
@@ -90,10 +92,10 @@ const RepoIssuesPage = () => {
 					<div className='flex gap-2 my-2 flex-wrap'>
 					{savedRepos.map((item) => 
 					<Button
-						key={item}
+						key={item.id}
 						size={'xs'}
-						onClick={()=>removeSavedRepo(item)}>
-						{item}
+						onClick={()=>removeSavedRepo(item.id)}>
+						{item.id}
 					</Button>
 						)}
 					</div>

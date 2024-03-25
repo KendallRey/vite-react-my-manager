@@ -1,5 +1,5 @@
 import { createContext, useMemo, useState } from "react";
-import { PreferenceContextType, UserGithubInfo } from "./preference-type";
+import { PreferenceContextType, SavedRepo, UserGithubInfo } from "./preference-type";
 import { useCookies } from 'react-cookie';
 
 export const PreferenceContext = createContext<PreferenceContextType>({
@@ -59,7 +59,7 @@ const PreferenceProvider: React.FC<PreferenceProviderType> = (props) => {
 
   //#region Repos
 
-  const [repos, setRepos] = useState<string[]>([])
+  const [repos, setRepos] = useState<SavedRepo[]>([])
 
   const SaveRepos = (repos: string[]) => {
     setCookies(SAVED_REPOS, repos, {
@@ -67,16 +67,16 @@ const PreferenceProvider: React.FC<PreferenceProviderType> = (props) => {
     });
   }
 
-  const AddSavedRepo = (repo: string) => {
-    if(SavedRepos?.includes(repo)) return;
-    const _repos = SavedRepos ? SavedRepos.concat(repo) : [repo]
+  const AddSavedRepo = (repoConfig: SavedRepo) => {
+    if(SavedRepos?.includes(repoConfig)) return;
+    const _repos = SavedRepos ? SavedRepos.concat(repoConfig) : [repoConfig]
     setCookies(SAVED_REPOS, _repos, {
       path: '/',
     });
   }
 
   const RemoveSavedRepo = (repo: string) => {
-    const _repos = SavedRepos ? SavedRepos.filter((item) => item !== repo) : []
+    const _repos = SavedRepos ? SavedRepos.filter((item) => item.id !== repo) : []
     setCookies(SAVED_REPOS, _repos, {
       path: '/',
     });
@@ -94,7 +94,7 @@ const PreferenceProvider: React.FC<PreferenceProviderType> = (props) => {
 
   const SavedRepos = useMemo(() => {
     try {
-      return cookies[SAVED_REPOS] as string[] ?? [];
+      return cookies[SAVED_REPOS] as SavedRepo[] ?? [];
     } catch (e) {
       return [];
     }

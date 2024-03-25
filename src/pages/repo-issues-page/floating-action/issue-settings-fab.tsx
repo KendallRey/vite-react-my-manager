@@ -2,15 +2,15 @@ import { editConfig } from '@/redux/IssueConfigReducer';
 import { selectConfig } from '@/redux/IssueConfigSelector';
 import { AppDispatch } from '@/store';
 import {
-  Checkbox,
-  IconButton,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger
+	Checkbox,
+	IconButton,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverCloseButton,
+	PopoverContent,
+	PopoverHeader,
+	PopoverTrigger
 } from '@chakra-ui/react'
 
 import { TbSettingsCode } from "react-icons/tb";
@@ -26,8 +26,8 @@ const IssueSettingsFab = () => {
 		dispatch(editConfig({ [name]: checked }))
 	}
 
-  return (
-    <div className='fixed right-2 bottom-10 z-10'>
+	return (
+		<div className='fixed right-2 bottom-10 z-10'>
 			<Popover>
 				<PopoverTrigger>
 					<IconButton aria-label={'Settings'} isRound
@@ -53,12 +53,18 @@ const IssueSettingsFab = () => {
 							onChange={onChangeConfig}>
 							Hide Labels
 						</Checkbox>
+						<Checkbox
+							name='simplifyList'
+							checked={_config.simplifyList}
+							onChange={onChangeConfig}>
+							Simplify List
+						</Checkbox>
 					</PopoverBody>
 				</PopoverContent>
 			</Popover>
 
 		</div>
-    )
+		)
 }
 
 export default IssueSettingsFab
