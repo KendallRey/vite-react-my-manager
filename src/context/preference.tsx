@@ -1,6 +1,7 @@
 import { createContext, useMemo, useState } from "react";
 import { PreferenceContextType, SavedRepo, UserGithubInfo } from "./preference-type";
 import { useCookies } from 'react-cookie';
+import { GetIDs, ReplaceObjectWithID } from "@/helpers/array-helper";
 
 export const PreferenceContext = createContext<PreferenceContextType>({
   gihubInfo: null,
@@ -68,8 +69,15 @@ const PreferenceProvider: React.FC<PreferenceProviderType> = (props) => {
   }
 
   const AddSavedRepo = (repoConfig: SavedRepo) => {
-    if(SavedRepos?.includes(repoConfig)) return;
-    const _repos = SavedRepos ? SavedRepos.concat(repoConfig) : [repoConfig]
+		const savedRepoIDs = GetIDs(SavedRepos);
+    const addNewRepo = !savedRepoIDs.includes(repoConfig.id);
+		let _repos = SavedRepos ?? [];
+
+		if(addNewRepo) 
+			_repos = SavedRepos.concat(repoConfig);
+		else 
+			_repos = ReplaceObjectWithID(SavedRepos, repoConfig.id, repoConfig);
+
     setCookies(SAVED_REPOS, _repos, {
       path: '/',
     });

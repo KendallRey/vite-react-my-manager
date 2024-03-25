@@ -12,3 +12,12 @@ export const SetRandomIDs = <T>(list: T[]) => list.map((item) => {
     ...item,
   } as (WithID & T)
 })
+
+export const ReplaceObjectWithID = <T>(list: (T & WithID)[], id: string, obj: T) => list.map((item) => {
+  if(item.id === id)
+    return {
+      id,
+      ...obj
+    }
+  return item;
+})
