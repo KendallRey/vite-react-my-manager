@@ -13,6 +13,7 @@ import {
 	PopoverTrigger
 } from '@chakra-ui/react'
 
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { TbSettingsCode } from "react-icons/tb";
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -26,8 +27,22 @@ const IssueSettingsFab = () => {
 		dispatch(editConfig({ [name]: checked }))
 	}
 
+	const onScrollTop = () => {
+		window.scrollTo({
+			top: 0,
+			behavior: 'smooth'
+		});
+	}
+
+	const onScrollBottom = () => {
+		window.scrollTo({
+			top: document.body.scrollHeight,
+			behavior: 'smooth'
+		});
+	}
+
 	return (
-		<div className='fixed right-2 bottom-10 z-10'>
+		<div className='fixed flex flex-col gap-2 right-2 bottom-10 z-10'>
 			<Popover>
 				<PopoverTrigger>
 					<IconButton aria-label={'Settings'} isRound
@@ -62,7 +77,19 @@ const IssueSettingsFab = () => {
 					</PopoverBody>
 				</PopoverContent>
 			</Popover>
-
+			<hr/>
+			<IconButton aria-label={'Scroll Up'} isRound
+				onClick={onScrollTop}
+				variant={'solid'}
+				colorScheme='teal'>
+				<FaArrowUp />
+			</IconButton>
+			<IconButton aria-label={'Scroll Up'} isRound
+				onClick={onScrollBottom}
+				variant={'solid'}
+				colorScheme='teal'>
+				<FaArrowDown />
+			</IconButton>
 		</div>
 		)
 }
