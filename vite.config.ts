@@ -10,7 +10,7 @@ export default defineConfig({
     EnvironmentPlugin("all"),
   ],
   server : {
-    port : 4000
+    port : 6900
   },
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],

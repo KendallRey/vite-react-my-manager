@@ -54,11 +54,11 @@ const RepoIssuesPage = () => {
 		<div className='flex min-h-screen flex-col mx-2 gap-5'>
 
 			<Button onClick={toggleColorMode}>Mode</Button>
-			<div className='flex flex-wrap gap-5'>
+			<div className='grid md:grid-cols-2 lg:grid-cols-4 gap-5'>
 
 				<InfoSection/>
 
-				<RepositorySection/>
+				{/* <RepositorySection/> */}
 
 				<FormatSection/>
 
