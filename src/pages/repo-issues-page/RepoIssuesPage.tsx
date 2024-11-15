@@ -1,18 +1,16 @@
 import { useContext, useState } from 'react'
 import Section from '@/components/section/Section'
 import IssueList from './issue-list/IssueList'
-import { selectConfig } from '@/redux/IssueConfigSelector'
 import { Button, useColorMode } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid';
 import IssueSettingsFab from './floating-action/issue-settings-fab'
 import ConfigSection from './config-section/config-section'
 import FormatSection from './format-section/format-section'
-import RepositorySection from './repository-section/repository-section'
 import TitleFilterSection from './title-filter-section/title-filter-section'
 import InfoSection from './info-section/info-section'
-import { useSelector } from 'react-redux'
 import { PreferenceContext } from '@/context/preference'
 import { GetIDs } from '@/helpers/array-helper'
+import { useAppSelector } from '@/redux/hooks/hooks'
 
 const RepoIssuesPage = () => {
 
@@ -29,7 +27,7 @@ const RepoIssuesPage = () => {
 
 	//#region Repository
 
-	const _config = useSelector(selectConfig);
+	const _config = useAppSelector((state) => state.config);
 
 	//#region Repos List
 

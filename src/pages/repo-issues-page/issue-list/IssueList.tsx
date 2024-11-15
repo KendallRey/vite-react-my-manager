@@ -5,19 +5,19 @@ import IssueItem from "./issue/IssueItem";
 import { OctoGetRepositoryIssuesApi } from "@/components/github-api/repository-issues/RepositoryIssuesApi";
 import { GitHubIssue } from "@/components/github-api/response-type/GithubIssueType";
 import { useSelector } from "react-redux";
-import { selectParams } from "@/redux/GithubParamsSelector";
+import { selectParams } from "@/redux/features/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
 import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
 import { Button, FormControl, FormLabel, IconButton, Input, Select, Stat, StatHelpText, StatLabel, StatNumber, useToast } from "@chakra-ui/react";
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
 import { FaSave, FaWindowClose } from "react-icons/fa";
-import { selectGithub } from "@/redux/GithubSelector";
-import { selectFilter } from "@/redux/GithubFilterSelector";
+import { selectGithub } from "@/redux/features/GithubSelector";
+import { selectFilter } from "@/redux/features/GithubFilterSelector";
 import { PreferenceContext } from "@/context/preference";
 import { CgPlayListRemove } from "react-icons/cg";
 import { v4 as uuidv4 } from 'uuid';
 import { GetIDs } from "@/helpers/array-helper";
-import { selectConfig } from "@/redux/IssueConfigSelector";
+import { selectConfig } from "@/redux/features/IssueConfigSelector";
 
 const IssueList: React.FC<IssueListType> = (props) => {
 

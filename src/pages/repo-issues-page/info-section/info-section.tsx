@@ -2,18 +2,16 @@ import { OctoGetRepositoriesApi } from "@/components/github-api/repository/Repos
 import Section from "@/components/section/Section";
 import { PreferenceContext } from "@/context/preference";
 import { FailedToast, FetchingToast, LoadedToast, SuccessToast } from "@/helpers/ToastPresets";
-import { editParams } from "@/redux/GithubParamsReducer";
-import { selectParams } from "@/redux/GithubParamsSelector";
-import { editGithub } from "@/redux/GithubReducer";
-import { AppDispatch } from "@/store";
+import { editParams } from "@/redux/features/GithubParamsReducer";
+import { editGithub } from "@/redux/features/GithubReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { Button, FormControl, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 const InfoSection = () => {
 
-	const dispatch = useDispatch<AppDispatch>();
-	const _params = useSelector(selectParams);
+	const dispatch = useAppDispatch();
+	const _params = useAppSelector((state) => state.params);
 	const toast = useToast();
  
 	const {

@@ -2,19 +2,16 @@ import { OCTO_KEY_OWNER, OCTO_KEY_REPO } from "@/components/github-api/GithubBas
 import { OctoGetRepositoryIssuesApi } from "@/components/github-api/repository-issues/RepositoryIssuesApi"
 import { GitHubIssue } from "@/components/github-api/response-type/GithubIssueType";
 import Section from "@/components/section/Section"
-import { editParams } from "@/redux/GithubParamsReducer";
-import { selectParams } from "@/redux/GithubParamsSelector";
-import { selectGithub } from "@/redux/GithubSelector";
-import { AppDispatch } from "@/store";
+import { editParams } from "@/redux/features/GithubParamsReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { Button, FormLabel, Select } from "@chakra-ui/react"
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 const RepositorySection = () => {
 
-	const dispatch = useDispatch<AppDispatch>();
-	const _params = useSelector(selectParams);
-  const _github = useSelector(selectGithub);
+	const dispatch = useAppDispatch();
+	const _params = useAppSelector((state) => state.params);
+  const _github = useAppSelector((state) => state.github);
 
 	//#region Issues
 

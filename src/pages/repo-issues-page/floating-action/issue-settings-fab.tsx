@@ -1,5 +1,4 @@
-import { editConfig } from '@/redux/IssueConfigReducer';
-import { selectConfig } from '@/redux/IssueConfigSelector';
+import { editConfig } from '@/redux/features/IssueConfigReducer';
 import { AppDispatch } from '@/store';
 import {
 	Checkbox,
@@ -17,13 +16,13 @@ import {
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { TbSettingsCode } from "react-icons/tb";
 import { RiChatDeleteLine } from "react-icons/ri";
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
 
 const IssueSettingsFab = () => {
 
-	const _config = useSelector(selectConfig);
+	const dispatch = useAppDispatch();
+	const _config = useAppSelector((state) => state.config);
 	const toast = useToast();
-	const dispatch = useDispatch<AppDispatch>();
 
 	const onChangeConfig = (e: RCE<HTMLInputElement>) => {
 		const { name, checked } = e.target;

@@ -7,18 +7,16 @@ import {
 	removeTitleExcludeFilter,
 	removeTitleIncludeFilter,
 	toggleTitleFilter
-} from "@/redux/GithubFilterReducer";
-import { selectFilter } from "@/redux/GithubFilterSelector";
-import { AppDispatch } from "@/store";
+} from "@/redux/features/GithubFilterReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { Button, Checkbox, IconButton, Input } from "@chakra-ui/react";
 import { FaWindowClose } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 
 const TitleFilterSection = () => {
 
-	const dispatch = useDispatch<AppDispatch>();
-	const _filter = useSelector(selectFilter);
+	const dispatch = useAppDispatch();
+	const _filter = useAppSelector((state) => state.filter);
 
 	const OnToggleFilter = () => dispatch(toggleTitleFilter());
 

@@ -1,14 +1,12 @@
 import Section from "@/components/section/Section";
-import { editFormat } from "@/redux/IssueFormatReducer";
-import { selectFormat } from "@/redux/IssueFormatSelector";
-import { AppDispatch } from "@/store";
+import { editFormat } from "@/redux/features/IssueFormatReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
 
 const FormatSection = () => {
 
-	const dispatch = useDispatch<AppDispatch>();
-	const _format = useSelector(selectFormat);
+	const dispatch = useAppDispatch();
+	const _format = useAppSelector((state) => state.format);
 
 
 	const onChangeFormat = (e: RCE<HTMLInputElement>) => {

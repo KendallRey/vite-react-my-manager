@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import githubParamsReducer from './redux/GithubParamsReducer'
-import issueConfigReducer from './redux/IssueConfigReducer';
-import issueFormatReducer from './redux/IssueFormatReducer';
-import githubFilterReducer from './redux/GithubFilterReducer';
-import githubReducer from './redux/GithubReducer';
+import githubParamsReducer from './redux/features/GithubParamsReducer'
+import issueConfigReducer from './redux/features/IssueConfigReducer';
+import issueFormatReducer from './redux/features/IssueFormatReducer';
+import githubFilterReducer from './redux/features/GithubFilterReducer';
+import githubReducer from './redux/features/GithubReducer';
 
 export const store = configureStore({
   

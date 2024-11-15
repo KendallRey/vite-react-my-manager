@@ -1,14 +1,12 @@
 import Section from "@/components/section/Section";
-import { editConfig } from "@/redux/IssueConfigReducer";
-import { selectConfig } from "@/redux/IssueConfigSelector";
-import { AppDispatch } from "@/store";
+import { editConfig } from "@/redux/features/IssueConfigReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { Checkbox, Stack } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
 
 const ConfigSection = () => {
 
-	const dispatch = useDispatch<AppDispatch>();
-	const _config = useSelector(selectConfig);
+	const dispatch = useAppDispatch();
+	const _config = useAppSelector((state) => state.config);
 
 	const onChangeConfig = (e: RCE<HTMLInputElement>) => {
 		const { name, checked } = e.target;

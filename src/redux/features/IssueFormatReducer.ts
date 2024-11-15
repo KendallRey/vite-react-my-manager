@@ -8,6 +8,8 @@ export type IssueFormatStateType = {
 export const issueFormatSlice = createSlice({
   name: 'issue-format',
   initialState: {
+    prefix: '',
+    suffix: '',
     removeLink: false,
     hideTitleFilter: true,
     hideLabels: true,

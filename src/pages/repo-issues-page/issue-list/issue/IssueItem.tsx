@@ -1,13 +1,11 @@
 import { IssueItemType } from "./IssueItemType";
-import { useSelector } from "react-redux";
-import { selectConfig } from "../../../../redux/IssueConfigSelector";
 import IssueLabels from "./IssueItemLabels";
-import { selectFormat } from "@/redux/IssueFormatSelector";
+import { useAppSelector } from "@/redux/hooks/hooks";
 
 const IssueItem = (props: IssueItemType) => {
 
-    const _config = useSelector(selectConfig);
-    const _format = useSelector(selectFormat);
+    const _config = useAppSelector((state) => state.config);
+    const _format = useAppSelector((state) => state.format);
 
     const { issue } = props;
 
