@@ -4,30 +4,26 @@ import { IssueListType } from "./IssueListType"
 import IssueItem from "./issue/IssueItem";
 import { OctoGetRepositoryIssuesApi } from "@/components/github-api/repository-issues/RepositoryIssuesApi";
 import { GitHubIssue } from "@/components/github-api/response-type/GithubIssueType";
-import { useSelector } from "react-redux";
-import { selectParams } from "@/redux/features/GithubParamsSelector";
 import { OCTO_KEY_REPO } from "@/components/github-api/GithubBaseApiType";
 import { GitHubRepository } from "@/components/github-api/response-type/GithubRepositoryType";
 import { Button, FormControl, FormLabel, IconButton, Input, Select, Stat, StatHelpText, StatLabel, StatNumber, useToast } from "@chakra-ui/react";
 import { FailedToast, FetchingToast, LoadedToast } from "@/helpers/ToastPresets";
 import { FaSave, FaWindowClose } from "react-icons/fa";
-import { selectGithub } from "@/redux/features/GithubSelector";
-import { selectFilter } from "@/redux/features/GithubFilterSelector";
 import { PreferenceContext } from "@/context/preference";
 import { CgPlayListRemove } from "react-icons/cg";
 import { v4 as uuidv4 } from 'uuid';
 import { GetIDs } from "@/helpers/array-helper";
-import { selectConfig } from "@/redux/features/IssueConfigSelector";
+import { useAppSelector } from "@/redux/hooks/hooks";
 
 const IssueList: React.FC<IssueListType> = (props) => {
 
 	const { OnRemove, repoName } = props;
 	const { addSavedRepo, removeSavedRepo, repos, savedRepos } = useContext(PreferenceContext);
 
-	const _params = useSelector(selectParams);
-	const _github = useSelector(selectGithub);
-	const _filter = useSelector(selectFilter);
-	const _config = useSelector(selectConfig);
+	const _params = useAppSelector((state) => state.params);
+	const _github = useAppSelector((state) => state.github);
+	const _filter = useAppSelector((state) => state.filter);
+	const _config = useAppSelector((state) => state.config);
 
 	const toast = useToast();
 
