@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { Provider } from 'react-redux'
-import { store } from './store.ts'
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import PreferenceProvider from './context/preference.tsx'
+import { store } from './redux/services/store.ts'
 
 const theme = extendTheme({
   config: {

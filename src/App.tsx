@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { Suspense, lazy } from 'react'
 import RepoIssuesPage from './pages/repo-issues-page/RepoIssuesPage'
+import UserPage from './pages/user/page'
 
 const LandingPage = lazy(()=>import("./pages/landing-page/LandingPage"))
 const AuthLayout = lazy(()=>import("./layout/AuthLayout"))
@@ -24,8 +25,8 @@ function App() {
 			
 			<Suspense fallback={<div>Loading...</div>}>
 				<Routes>
-					<Route path='user' element={<AuthLayout/>}>
-						<Route index element={<LandingPage/>}/>
+					<Route path='user' element={<Layout/>}>
+						<Route index element={<UserPage/>}/>
 					</Route>
 				</Routes>
 			</Suspense>

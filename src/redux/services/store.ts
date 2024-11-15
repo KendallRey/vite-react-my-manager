@@ -6,6 +6,7 @@ import issueConfigSlice from "../features/IssueConfigReducer";
 import issueFormatSlice from "../features/IssueFormatReducer";
 import githubSlice from "../features/GithubReducer";
 import githubFilterSlice from "../features/GithubFilterReducer";
+import userSlice from '../features/user/userSlice';
 
 const persistConfig = {
   key: "root",
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   format: issueFormatSlice,
   github: githubSlice,
   filter: githubFilterSlice,
+  user: userSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
